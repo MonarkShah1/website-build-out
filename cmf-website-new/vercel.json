@@ -1,0 +1,13 @@
+{
+  "functions": {
+    "api/submit-quote.js": {
+      "maxDuration": 30
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/submit-quote",
+      "destination": "/api/submit-quote.js"
+    }
+  ]
+}
