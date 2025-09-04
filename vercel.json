@@ -1,0 +1,12 @@
+{
+  "buildCommand": "cd cmf-website-new && npm install && npm run build",
+  "outputDirectory": "cmf-website-new/dist",
+  "installCommand": "cd cmf-website-new && npm install",
+  "framework": "astro",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/$1"
+    }
+  ]
+}
