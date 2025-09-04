@@ -1,4 +1,0 @@
-{
-  "buildCommand": "cd cmf-website-new && npm install && npm run build",
-  "installCommand": "cd cmf-website-new && npm install"
-}
