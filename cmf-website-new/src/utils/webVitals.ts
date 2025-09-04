@@ -3,7 +3,7 @@
  * CRITICAL for SEO - Core Web Vitals are a ranking factor
  */
 
-import { getCLS, getFID, getFCP, getLCP, getTTFB } from 'web-vitals';
+import { onCLS, onFID, onFCP, onLCP, onTTFB, onINP } from 'web-vitals';
 
 interface Metric {
   name: string;
@@ -16,7 +16,8 @@ interface Metric {
 // Thresholds for Core Web Vitals
 const thresholds = {
   LCP: { good: 2500, poor: 4000 },      // Largest Contentful Paint
-  FID: { good: 100, poor: 300 },        // First Input Delay
+  FID: { good: 100, poor: 300 },        // First Input Delay (deprecated, use INP)
+  INP: { good: 200, poor: 500 },        // Interaction to Next Paint (replaces FID)
   CLS: { good: 0.1, poor: 0.25 },       // Cumulative Layout Shift
   FCP: { good: 1800, poor: 3000 },      // First Contentful Paint
   TTFB: { good: 800, poor: 1800 },      // Time to First Byte
@@ -43,7 +44,7 @@ function sendToAnalytics(metric: any) {
     });
   }
   
-  // Send to Google Analytics
+  // Send to Google Analytics 4
   if (typeof window !== 'undefined' && 'gtag' in window) {
     (window as any).gtag('event', metric.name, {
       event_category: 'Web Vitals',
@@ -58,7 +59,7 @@ function sendToAnalytics(metric: any) {
   }
   
   // Send to custom monitoring endpoint
-  if (navigator.sendBeacon && !import.meta.env.DEV) {
+  if (typeof navigator !== 'undefined' && navigator.sendBeacon && !import.meta.env.DEV) {
     const data = JSON.stringify({
       metric: metric.name,
       value: metric.value,
@@ -72,130 +73,140 @@ function sendToAnalytics(metric: any) {
     });
     
     // This endpoint would be configured in production
-    navigator.sendBeacon('/api/metrics', data);
+    try {
+      navigator.sendBeacon('/api/metrics', data);
+    } catch (e) {
+      // Beacon failed, ignore
+    }
   }
 }
 
 export function initWebVitals() {
-  // Core Web Vitals
-  getCLS(sendToAnalytics);
-  getFID(sendToAnalytics);
-  getLCP(sendToAnalytics);
+  // Core Web Vitals (these affect SEO rankings)
+  onCLS(sendToAnalytics);
+  onINP(sendToAnalytics);  // INP replaces FID as of March 2024
+  onLCP(sendToAnalytics);
   
   // Other metrics
-  getFCP(sendToAnalytics);
-  getTTFB(sendToAnalytics);
+  onFCP(sendToAnalytics);
+  onTTFB(sendToAnalytics);
+  onFID(sendToAnalytics);  // Keep FID for backwards compatibility
   
   // Custom performance tracking
-  observePerformance();
+  if (typeof window !== 'undefined') {
+    observePerformance();
+  }
 }
 
 // Performance observer for custom metrics
 function observePerformance() {
-  if ('PerformanceObserver' in window) {
-    // Observe long tasks (blocking the main thread)
-    try {
-      const longTaskObserver = new PerformanceObserver((list) => {
-        for (const entry of list.getEntries()) {
-          if (entry.duration > 50) {
-            if (import.meta.env.DEV) {
-              console.warn('[Performance] Long task detected:', {
-                duration: entry.duration,
-                startTime: entry.startTime,
-                name: entry.name,
-              });
-            }
-            
-            sendToAnalytics({
-              name: 'long_task',
-              value: entry.duration,
-              id: `${entry.startTime}`,
+  if (typeof window === 'undefined' || !('PerformanceObserver' in window)) {
+    return;
+  }
+
+  // Observe long tasks (blocking the main thread)
+  try {
+    const longTaskObserver = new PerformanceObserver((list) => {
+      for (const entry of list.getEntries()) {
+        if (entry.duration > 50) {
+          if (import.meta.env.DEV) {
+            console.warn('[Performance] Long task detected:', {
+              duration: entry.duration,
+              startTime: entry.startTime,
+              name: entry.name,
             });
           }
-        }
-      });
-      
-      longTaskObserver.observe({ entryTypes: ['longtask'] });
-    } catch (e) {
-      // Long task observer not supported
-    }
-    
-    // Observe layout shifts
-    try {
-      const layoutShiftObserver = new PerformanceObserver((list) => {
-        for (const entry of list.getEntries()) {
-          // Only track layout shifts without recent input (user-initiated shifts are ok)
-          if (!(entry as any).hadRecentInput) {
-            if (import.meta.env.DEV) {
-              console.warn('[Performance] Layout shift detected:', {
-                value: (entry as any).value,
-                sources: (entry as any).sources,
-              });
-            }
-            
-            sendToAnalytics({
-              name: 'layout_shift',
-              value: (entry as any).value,
-              id: `${entry.startTime}`,
-            });
-          }
-        }
-      });
-      
-      layoutShiftObserver.observe({ entryTypes: ['layout-shift'] });
-    } catch (e) {
-      // Layout shift observer not supported
-    }
-    
-    // Track resource loading
-    try {
-      const resourceObserver = new PerformanceObserver((list) => {
-        for (const entry of list.getEntries()) {
-          const resourceEntry = entry as PerformanceResourceTiming;
           
-          // Track slow resources
-          if (resourceEntry.duration > 1000) {
-            if (import.meta.env.DEV) {
-              console.warn('[Performance] Slow resource:', {
-                name: resourceEntry.name,
-                duration: resourceEntry.duration,
-                type: resourceEntry.initiatorType,
-              });
-            }
+          sendToAnalytics({
+            name: 'long_task',
+            value: entry.duration,
+            id: `${entry.startTime}`,
+          });
+        }
+      }
+    });
+    
+    longTaskObserver.observe({ entryTypes: ['longtask'] });
+  } catch (e) {
+    // Long task observer not supported
+  }
+  
+  // Observe layout shifts
+  try {
+    const layoutShiftObserver = new PerformanceObserver((list) => {
+      for (const entry of list.getEntries()) {
+        // Only track layout shifts without recent input (user-initiated shifts are ok)
+        if (!(entry as any).hadRecentInput) {
+          if (import.meta.env.DEV) {
+            console.warn('[Performance] Layout shift detected:', {
+              value: (entry as any).value,
+              sources: (entry as any).sources,
+            });
+          }
+          
+          sendToAnalytics({
+            name: 'layout_shift',
+            value: (entry as any).value,
+            id: `${entry.startTime}`,
+          });
+        }
+      }
+    });
+    
+    layoutShiftObserver.observe({ entryTypes: ['layout-shift'] });
+  } catch (e) {
+    // Layout shift observer not supported
+  }
+  
+  // Track resource loading
+  try {
+    const resourceObserver = new PerformanceObserver((list) => {
+      for (const entry of list.getEntries()) {
+        const resourceEntry = entry as PerformanceResourceTiming;
+        
+        // Track slow resources
+        if (resourceEntry.duration > 1000) {
+          if (import.meta.env.DEV) {
+            console.warn('[Performance] Slow resource:', {
+              name: resourceEntry.name,
+              duration: resourceEntry.duration,
+              type: resourceEntry.initiatorType,
+            });
           }
         }
-      });
-      
-      resourceObserver.observe({ entryTypes: ['resource'] });
-    } catch (e) {
-      // Resource observer not supported
-    }
+      }
+    });
+    
+    resourceObserver.observe({ entryTypes: ['resource'] });
+  } catch (e) {
+    // Resource observer not supported
   }
 }
 
 // Utility to measure custom metrics
 export function measurePerformance(markName: string) {
-  if ('performance' in window && 'mark' in performance) {
-    performance.mark(markName);
-    
-    return {
-      end: () => {
-        const endMark = `${markName}-end`;
-        const measureName = `${markName}-duration`;
-        
-        performance.mark(endMark);
-        performance.measure(measureName, markName, endMark);
-        
-        const measure = performance.getEntriesByName(measureName)[0];
-        if (measure) {
-          sendToAnalytics({
-            name: markName,
-            value: measure.duration,
-          });
-        }
-      }
-    };
+  if (typeof window === 'undefined' || !('performance' in window) || !('mark' in performance)) {
+    return { end: () => {} };
   }
+
+  performance.mark(markName);
   
-  return { end: () => {} };
+  return {
+    end: () => {
+      const endMark = `${markName}-end`;
+      const measureName = `${markName}-duration`;
+      
+      performance.mark(endMark);
+      performance.measure(measureName, markName, endMark);
+      
+      const measure = performance.getEntriesByName(measureName)[0];
+      if (measure) {
+        sendToAnalytics({
+          name: markName,
+          value: measure.duration,
+          id: `${markName}-${Date.now()}`,
+        });
+      }
+    }
+  };
 }
