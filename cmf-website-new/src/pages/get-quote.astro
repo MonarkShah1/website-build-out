@@ -1,0 +1,364 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SEO from '../components/SEO.astro';
+import QuoteForm from '../components/QuoteForm/QuoteForm';
+
+const seoData = {
+  title: 'Get an Instant Quote - Canadian Metal Fabricators',
+  description: 'Request a custom quote for your metal fabrication project. Upload CAD files, specify requirements, and receive a detailed quote within 24 hours.',
+  keywords: 'metal fabrication quote, custom metal work quote, laser cutting quote, metal bending quote, welding services quote, Toronto metal fabrication pricing',
+  canonical: '/get-quote',
+  ogType: 'website' as const,
+  ogImage: '/images/quote-form-preview.jpg',
+  structuredData: {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'Get a Custom Metal Fabrication Quote',
+    description: 'Request a quote for custom metal fabrication services including laser cutting, welding, bending, and assembly.',
+    url: 'https://www.canadianmetalfab.com/get-quote',
+    breadcrumb: {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Home',
+          item: 'https://www.canadianmetalfab.com'
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Get Quote',
+          item: 'https://www.canadianmetalfab.com/get-quote'
+        }
+      ]
+    }
+  }
+};
+---
+
+<Layout title={seoData.title} description={seoData.description}>
+  <SEO {...seoData} slot="head" />
+  
+  <main class="quote-page">
+    <section class="hero-section">
+      <div class="container">
+        <div class="hero-content">
+          <h1>Get Your Custom Metal Fabrication Quote</h1>
+          <p class="lead">
+            Upload your CAD files and specifications for an accurate quote within 24 hours
+          </p>
+          <div class="hero-features">
+            <div class="feature">
+              <span class="feature-icon">⚡</span>
+              <span>Fast Response</span>
+            </div>
+            <div class="feature">
+              <span class="feature-icon">📐</span>
+              <span>Accurate Pricing</span>
+            </div>
+            <div class="feature">
+              <span class="feature-icon">🔒</span>
+              <span>Secure & Confidential</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="form-section">
+      <div class="container">
+        <QuoteForm client:load />
+      </div>
+    </section>
+
+    <section class="benefits-section">
+      <div class="container">
+        <h2>Why Choose Canadian Metal Fabricators?</h2>
+        <div class="benefits-grid">
+          <div class="benefit-card">
+            <div class="benefit-icon">🏭</div>
+            <h3>State-of-the-Art Facility</h3>
+            <p>Advanced machinery and technology for precision metal fabrication</p>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon">👥</div>
+            <h3>Expert Team</h3>
+            <p>Skilled engineers and fabricators with decades of experience</p>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon">📋</div>
+            <h3>Quality Certified</h3>
+            <p>ISO 9001:2015 certified for consistent quality standards</p>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon">🚚</div>
+            <h3>On-Time Delivery</h3>
+            <p>98% on-time delivery rate with expedited options available</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="faq-section">
+      <div class="container">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <h3>What file formats do you accept?</h3>
+            <p>We accept CAD files (.dwg, .dxf, .step, .stp, .stl), PDFs, and common image formats. Maximum file size is 25MB per file.</p>
+          </div>
+          <div class="faq-item">
+            <h3>How quickly will I receive my quote?</h3>
+            <p>Most quotes are provided within 24 hours. Complex projects may take up to 48 hours for accurate pricing.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Is there a minimum order quantity?</h3>
+            <p>We handle projects of all sizes, from single prototypes to large production runs. No minimum order required.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Can you help with design?</h3>
+            <p>Yes! Our engineering team can assist with design optimization, material selection, and DFM (Design for Manufacturing) recommendations.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-section">
+      <div class="container">
+        <h2>Need Help With Your Quote?</h2>
+        <p>Our team is here to assist you with your metal fabrication needs</p>
+        <div class="cta-actions">
+          <a href="tel:+14165551234" class="btn btn-secondary">
+            📞 Call (416) 555-1234
+          </a>
+          <a href="mailto:quotes@canadianmetalfab.com" class="btn btn-secondary">
+            ✉️ Email Us
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .quote-page {
+    min-height: 100vh;
+    background: #f8f9fa;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  /* Hero Section */
+  .hero-section {
+    background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+    color: white;
+    padding: 4rem 0 3rem;
+  }
+
+  .hero-content {
+    text-align: center;
+  }
+
+  .hero-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+  }
+
+  .lead {
+    font-size: 1.25rem;
+    opacity: 0.95;
+    margin-bottom: 2rem;
+  }
+
+  .hero-features {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .feature {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    backdrop-filter: blur(10px);
+  }
+
+  .feature-icon {
+    font-size: 1.25rem;
+  }
+
+  /* Form Section */
+  .form-section {
+    padding: 3rem 0;
+  }
+
+  /* Benefits Section */
+  .benefits-section {
+    padding: 4rem 0;
+    background: white;
+  }
+
+  .benefits-section h2 {
+    text-align: center;
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 3rem;
+  }
+
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+  }
+
+  .benefit-card {
+    text-align: center;
+    padding: 2rem;
+    border-radius: 8px;
+    background: #f8f9fa;
+    transition: transform 0.3s ease;
+  }
+
+  .benefit-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .benefit-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .benefit-card h3 {
+    font-size: 1.25rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+  }
+
+  .benefit-card p {
+    color: #666;
+    line-height: 1.6;
+  }
+
+  /* FAQ Section */
+  .faq-section {
+    padding: 4rem 0;
+  }
+
+  .faq-section h2 {
+    text-align: center;
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 3rem;
+  }
+
+  .faq-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .faq-item {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .faq-item h3 {
+    font-size: 1.125rem;
+    color: #333;
+    margin-bottom: 0.75rem;
+  }
+
+  .faq-item p {
+    color: #666;
+    line-height: 1.6;
+  }
+
+  /* CTA Section */
+  .cta-section {
+    padding: 4rem 0;
+    background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+    text-align: center;
+  }
+
+  .cta-section h2 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+  }
+
+  .cta-section p {
+    color: #666;
+    font-size: 1.125rem;
+    margin-bottom: 2rem;
+  }
+
+  .cta-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 0.875rem 2rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-block;
+  }
+
+  .btn-secondary {
+    background: white;
+    color: #333;
+    border: 2px solid #ddd;
+  }
+
+  .btn-secondary:hover {
+    background: #f8f9fa;
+    border-color: #2196F3;
+    color: #2196F3;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .hero-content h1 {
+      font-size: 1.875rem;
+    }
+
+    .lead {
+      font-size: 1.125rem;
+    }
+
+    .hero-features {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .benefits-grid,
+    .faq-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .cta-actions {
+      flex-direction: column;
+    }
+
+    .btn {
+      width: 100%;
+      max-width: 300px;
+    }
+  }
+</style>
