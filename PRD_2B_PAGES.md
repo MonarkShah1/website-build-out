@@ -1,3 +1,4 @@
+
 # Product Requirements Document (2B): Pages & "Instant Quote" Form
 
 **Project:** Canadian Metal Fabricators (CMF) Corporate Website
@@ -804,3 +805,102 @@ Complete event tracking specification: `/docs/analytics/form-events.md`
 ## Appendix C: Error Codes Reference
 
 Error handling and recovery strategies: `/docs/errors/reference.md`
+
+# Service Page Content Brief & SEO Blueprint
+
+## 1. Objective
+
+The goal of this document is to define a comprehensive, SEO-first content structure for all individual service pages (e.g., Laser Cutting, Metal Bending, Welding). By following this blueprint, each service page will be positioned to outrank competitors in search results across Eastern Canada, establish topical authority, and convert qualified leads.
+
+Our strategy is to create the most thorough and valuable resource for any potential customer searching for a specific metal fabrication service. We will achieve this by covering each topic more comprehensively than competitors like Metacut, ATH-CMF, and Weldflow.
+
+---
+
+## 2. The Ideal Service Page Structure
+
+Each service page should be a "pillar page"—a comprehensive resource on that specific service. It should be structured with the following components, in this order, to satisfy user intent from top to bottom.
+
+### **Section 1: Hero Section (Above the Fold)**
+
+*   **H1 Heading:** Must be the primary keyword. Format: `[Service Name] Services in [Primary Location]`.
+    *   *Example:* `High-Precision Laser Cutting Services in Toronto`.
+*   **Introductory Paragraph (2-3 sentences):** Immediately confirm the user's search. State what the service is, the core benefit, and the primary audience you serve. Mention key value propositions like "fast turnaround," "ISO 9001 certified," or "advanced technology."
+*   **Primary Call-to-Action (CTA):** A prominent "Request a Quote" button.
+*   **Key Trust Signals:** Display certifications (CWB, ISO) and a "Serving Canada Since [Year]" tagline right under the heading.
+
+### **Section 2: What is [Service Name]? (The "Explainer")**
+
+*   **H2 Heading:** `What is [Service Name]?`
+*   **Content:** A detailed but easy-to-understand explanation of the service.
+    *   Explain the process in simple terms.
+    *   Mention the key technologies/machines used (e.g., "Our 5-axis fiber lasers...").
+    *   Discuss the primary advantages of this service over alternatives.
+*   **SEO Goal:** Capture users at the top of the funnel who are still researching. Answer "what is" and "how does it work" queries. Include a high-quality image or short video of the process.
+
+### **Section 3: Our [Service Name] Capabilities**
+
+*   **H2 Heading:** `Our [Service Name] Capabilities`
+*   **Content:** This is where we provide the technical details that engineers and project managers need. Use a bulleted list or a grid layout.
+    *   **Technical Specifications:** Tolerances, max thickness, sheet/tube sizes, machine power (e.g., "Up to 1" steel, +/- 0.005" tolerance").
+    *   **Materials We Work With:** List all metals (e.g., Stainless Steel, Mild Steel, Aluminum, Brass, Copper). *Crucial for SEO.* Link each material to a future "materials" page if applicable.
+    *   **Software Used:** Mention compatibility with file types (e.g., "We accept DXF, DWG, STEP files").
+*   **Competitor Gap:** Most competitors list this, but it's often buried. We will make it prominent and highly detailed.
+
+### **Section 4: Applications & Industries Served**
+
+*   **H2 Heading:** `Common Applications of [Service Name]`
+*   **Content:** Show, don't just tell. Use high-quality images for each application.
+    *   List 5-7 key applications (e.g., "Architectural Panels," "Automotive Components," "Custom Brackets," "Signage").
+    *   Briefly describe why this service is ideal for that application.
+    *   List the key industries you serve with this service (e.g., Construction, Automotive, Aerospace, Retail).
+*   **SEO Goal:** Capture long-tail keywords like "laser cutting for architectural panels."
+
+### **Section 5: Why Choose Us for [Service Name]?**
+
+*   **H2 Heading:** `Why Choose Canadian Metal Fabricators?`
+*   **Content:** Differentiate your service. Focus on benefits, not just features.
+    *   **Quality & Precision:** Mention certifications and specific quality control processes.
+    *   **Advanced Equipment:** Name-drop your key machinery.
+    *   **Fast Turnaround:** Give an estimate if possible (e.g., "Quotes within 24 hours, parts in as little as 3 days").
+    *   **Expert Team:** Briefly mention the experience of your team.
+
+### **Section 6: Featured Projects**
+
+*   **H2 Heading:** `[Service Name] Project Showcase`
+*   **Content:** Display 2-3 mini-case studies of projects that heavily utilized this service.
+    *   High-quality image of the finished product.
+    *   Brief description: "Client," "Industry," "Challenge," "Solution."
+    *   Link to the full project page in your `/projects/` collection.
+*   **SEO Goal:** Builds immense trust and provides tangible proof of your capabilities.
+
+### **Section 7: Frequently Asked Questions (FAQ)**
+
+*   **H2 Heading:** `[Service Name] FAQs`
+*   **Content:** Answer 5-7 common questions related to the service. Use an accordion-style dropdown for usability.
+    *   *Examples:* "What is the maximum thickness you can cut?", "What information do I need to provide for a quote?", "What are your lead times?".
+*   **SEO Goal:** This is critical for capturing question-based queries and winning "People Also Ask" snippets in Google. Use FAQPage schema markup.
+
+### **Section 8: Final Call-to-Action (CTA)**
+
+*   **H2 Heading:** `Get a Quote for Your [Service Name] Project`
+*   **Content:** A final, a compelling paragraph encouraging users to get in touch. Reiterate the key benefits.
+*   **Action:** A simple quote request form or a prominent link to the main contact page.
+
+---
+
+## 3. Content Creation Checklist
+
+For each service page you create (e.g., `/services/laser-cutting.md`), ensure the following:
+
+- [ ] **H1 is unique and keyword-targeted.**
+- [ ] **Meta Title:** Under 60 characters. `[Service Name] Toronto | [Your Company Name]`.
+- [ ] **Meta Description:** 150-160 characters. A compelling, action-oriented summary of the page.
+- [ ] **Content is 100% original.**
+- [ ] **At least 1,000 words.** (Aim to be the most comprehensive resource).
+- [ ] **Images have descriptive alt text.** (e.g., `alt="CNC laser cutting 1/2 inch stainless steel sheet"`).
+- [ ] **Internal Links:** Link to related services, projects, and the contact page.
+- [ ] **Schema Markup:** Implement `Service` and `FAQPage` structured data.
+- [ ] **URL Slug:** Clean and simple (e.g., `/services/laser-cutting`).
+- [ ] **Readability:** Use short paragraphs, bullet points, and bold text to break up the content.
+
+By following this brief, we will create a powerful, scalable system for content that drives organic traffic and conversions.
