@@ -1,0 +1,439 @@
+---
+import { getCollection } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import RelatedServices from '../../components/RelatedServices.astro';
+import CTASection from '../../components/CTASection.astro';
+import TrustSignals from '../../components/TrustSignals.astro';
+import FAQSection from '../../components/FAQSection.astro';
+import type { CollectionEntry } from 'astro:content';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const services = await getCollection('services');
+  
+  return services.map((service) => ({
+    params: { slug: service.slug },
+    props: { service },
+  }));
+};
+
+interface Props {
+  service: CollectionEntry<'services'>;
+}
+
+const { service } = Astro.props;
+const { Content } = await service.render();
+
+const canonicalURL = new URL(`/services/${service.slug}/`, Astro.site);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: service.data.title,
+  description: service.data.description,
+  provider: {
+    '@type': 'Organization',
+    name: 'Canadian Metal Fabricators',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Toronto',
+      addressRegion: 'ON',
+      addressCountry: 'CA'
+    },
+    telephone: '+1-416-555-0100',
+    url: Astro.site
+  },
+  areaServed: service.data.locations || ['Toronto', 'Mississauga', 'Vaughan', 'Brampton'],
+  serviceType: service.data.serviceType,
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: `${service.data.title} Services`,
+    itemListElement: service.data.subServices?.map((subService, index) => ({
+      '@type': 'Offer',
+      position: index + 1,
+      name: subService.name,
+      description: subService.description
+    })) || []
+  }
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Home',
+      item: Astro.site
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'Services',
+      item: `${Astro.site}services/`
+    },
+    {
+      '@type': 'ListItem',
+      position: 3,
+      name: service.data.title,
+      item: canonicalURL
+    }
+  ]
+};
+
+const faqSchema = service.data.faqs ? {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: service.data.faqs.map(faq => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.answer
+    }
+  }))
+} : null;
+---
+
+<BaseLayout 
+  title={`${service.data.seoTitle || service.data.title} | CMF Toronto`}
+  description={service.data.metaDescription || service.data.description}
+  keywords={service.data.keywords?.join(', ')}
+  canonical={canonicalURL.toString()}
+  openGraph={{
+    title: service.data.ogTitle || service.data.title,
+    description: service.data.ogDescription || service.data.description,
+    image: service.data.heroImage || '/images/services-default-og.jpg',
+    type: 'website'
+  }}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
+  
+  <Breadcrumbs items={[
+    { label: 'Home', href: '/' },
+    { label: 'Services', href: '/services/' },
+    { label: service.data.title, href: `/services/${service.slug}/` }
+  ]} />
+
+  <article class="service-page">
+    <header class="hero-section">
+      <div class="container">
+        <div class="hero-content">
+          <h1 class="hero-title">{service.data.h1Title || service.data.title}</h1>
+          <p class="hero-description">{service.data.description}</p>
+          
+          <div class="hero-actions">
+            <a href="#quote-form" class="btn btn-primary btn-lg">
+              Get Instant Quote
+              <span class="sr-only">for {service.data.title}</span>
+            </a>
+            <a href="tel:+14165550100" class="btn btn-secondary btn-lg">
+              <svg class="icon" aria-hidden="true">
+                <use href="#icon-phone"></use>
+              </svg>
+              Call (416) 555-0100
+            </a>
+          </div>
+
+          {service.data.trustBadges && (
+            <div class="trust-badges">
+              {service.data.trustBadges.map(badge => (
+                <span class="badge">{badge}</span>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {service.data.heroImage && (
+          <div class="hero-image">
+            <img 
+              src={service.data.heroImage} 
+              alt={service.data.heroImageAlt || `${service.data.title} service`}
+              loading="eager"
+              fetchpriority="high"
+              width="600"
+              height="400"
+            />
+          </div>
+        )}
+      </div>
+    </header>
+
+    <TrustSignals />
+
+    <section class="content-section">
+      <div class="container">
+        <div class="content-grid">
+          <main class="main-content">
+            <Content />
+
+            {service.data.capabilities && (
+              <section class="capabilities">
+                <h2>Our {service.data.title} Capabilities</h2>
+                <div class="capabilities-grid">
+                  {service.data.capabilities.map(capability => (
+                    <div class="capability-card">
+                      <h3>{capability.title}</h3>
+                      <p>{capability.description}</p>
+                      {capability.specs && (
+                        <ul class="specs-list">
+                          {capability.specs.map(spec => (
+                            <li>{spec}</li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {service.data.materials && (
+              <section class="materials">
+                <h2>Materials We Work With</h2>
+                <div class="materials-grid">
+                  {service.data.materials.map(material => (
+                    <div class="material-item">
+                      <strong>{material.name}</strong>
+                      <span class="thickness">Thickness: {material.maxThickness}</span>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {service.data.applications && (
+              <section class="applications">
+                <h2>Industry Applications</h2>
+                <ul class="applications-list">
+                  {service.data.applications.map(app => (
+                    <li>
+                      <strong>{app.industry}:</strong> {app.description}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+          </main>
+
+          <aside class="sidebar">
+            <div class="sticky-sidebar">
+              <div class="quick-quote-widget">
+                <h3>Get a Quick Quote</h3>
+                <form class="mini-quote-form" data-service={service.slug}>
+                  <input type="text" placeholder="Your Name" required />
+                  <input type="email" placeholder="Email" required />
+                  <input type="tel" placeholder="Phone" required />
+                  <textarea placeholder="Briefly describe your project" rows="3"></textarea>
+                  <button type="submit" class="btn btn-primary btn-block">
+                    Get Quote
+                  </button>
+                </form>
+              </div>
+
+              {service.data.relatedServices && (
+                <div class="related-services-widget">
+                  <h3>Related Services</h3>
+                  <ul>
+                    {service.data.relatedServices.map(related => (
+                      <li>
+                        <a href={`/services/${related.slug}/`}>{related.title}</a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              <div class="contact-widget">
+                <h3>Need Help?</h3>
+                <p>Our experts are ready to assist</p>
+                <a href="tel:+14165550100" class="btn btn-outline btn-block">
+                  <svg class="icon" aria-hidden="true">
+                    <use href="#icon-phone"></use>
+                  </svg>
+                  (416) 555-0100
+                </a>
+                <a href="/contact/" class="btn btn-text btn-block">
+                  Visit Our Facility →
+                </a>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    {service.data.portfolio && (
+      <section class="portfolio-section">
+        <div class="container">
+          <h2>Recent {service.data.title} Projects</h2>
+          <div class="portfolio-grid">
+            {service.data.portfolio.map(project => (
+              <article class="portfolio-item">
+                <img src={project.image} alt={project.title} loading="lazy" />
+                <h3>{project.title}</h3>
+                <p>{project.description}</p>
+                <a href={`/projects/${project.slug}/`} class="link-arrow">
+                  View Project Details →
+                </a>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    {service.data.faqs && <FAQSection faqs={service.data.faqs} />}
+    
+    <CTASection 
+      title={`Ready to Start Your ${service.data.title} Project?`}
+      description="Get an instant quote or speak with our experts"
+      primaryAction={{ text: 'Get Instant Quote', href: '#quote-form' }}
+      secondaryAction={{ text: 'Call (416) 555-0100', href: 'tel:+14165550100' }}
+    />
+
+    <RelatedServices currentService={service.slug} />
+  </article>
+
+  <div id="quote-form" class="quote-form-modal">
+    <!-- React quote form component will be mounted here -->
+  </div>
+</BaseLayout>
+
+<style>
+  .service-page {
+    padding-top: var(--header-height);
+  }
+
+  .hero-section {
+    background: linear-gradient(135deg, var(--color-primary-50) 0%, var(--color-primary-100) 100%);
+    padding: 4rem 0;
+  }
+
+  .hero-content {
+    max-width: 600px;
+    margin-bottom: 2rem;
+  }
+
+  .hero-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+    color: var(--color-primary-900);
+  }
+
+  .hero-description {
+    font-size: 1.25rem;
+    color: var(--color-primary-700);
+    margin-bottom: 2rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+
+  .trust-badges {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    padding: 0.5rem 1rem;
+    background: white;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 3rem;
+    margin-top: 3rem;
+  }
+
+  .main-content {
+    min-width: 0;
+  }
+
+  .sticky-sidebar {
+    position: sticky;
+    top: calc(var(--header-height) + 2rem);
+  }
+
+  .capabilities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .capability-card {
+    padding: 1.5rem;
+    background: var(--color-gray-50);
+    border-radius: 0.75rem;
+    border: 1px solid var(--color-gray-200);
+  }
+
+  .materials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .material-item {
+    padding: 1rem;
+    background: white;
+    border: 1px solid var(--color-gray-200);
+    border-radius: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .portfolio-item img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  @media (max-width: 1024px) {
+    .content-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .sticky-sidebar {
+      position: static;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .hero-actions {
+      flex-direction: column;
+    }
+
+    .hero-actions .btn {
+      width: 100%;
+    }
+  }
+</style>

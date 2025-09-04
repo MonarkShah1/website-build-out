@@ -1,0 +1,592 @@
+---
+import { getCollection } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import Map from '../../components/Map.astro';
+import ServicesList from '../../components/ServicesList.astro';
+import CTASection from '../../components/CTASection.astro';
+import type { CollectionEntry } from 'astro:content';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const locations = await getCollection('locations');
+  
+  return locations.map((location) => ({
+    params: { slug: location.slug },
+    props: { location },
+  }));
+};
+
+interface Props {
+  location: CollectionEntry<'locations'>;
+}
+
+const { location } = Astro.props;
+const { Content } = await location.render();
+
+const canonicalURL = new URL(`/locations/${location.slug}/`, Astro.site);
+
+const localBusinessSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  '@id': canonicalURL.toString(),
+  name: `Canadian Metal Fabricators - ${location.data.city}`,
+  description: location.data.description,
+  url: canonicalURL.toString(),
+  telephone: location.data.phone,
+  email: location.data.email,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: location.data.address.street,
+    addressLocality: location.data.address.city,
+    addressRegion: location.data.address.province,
+    postalCode: location.data.address.postalCode,
+    addressCountry: 'CA'
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: location.data.coordinates.lat,
+    longitude: location.data.coordinates.lng
+  },
+  openingHoursSpecification: location.data.hours.map(hour => ({
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: hour.days,
+    opens: hour.open,
+    closes: hour.close
+  })),
+  priceRange: '$$',
+  servesCuisine: 'Metal Fabrication',
+  areaServed: location.data.serviceAreas.map(area => ({
+    '@type': 'City',
+    name: area
+  })),
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Metal Fabrication Services',
+    itemListElement: location.data.services.map((service, index) => ({
+      '@type': 'Offer',
+      position: index + 1,
+      name: service.name,
+      description: service.description
+    }))
+  },
+  aggregateRating: location.data.rating ? {
+    '@type': 'AggregateRating',
+    ratingValue: location.data.rating.value,
+    reviewCount: location.data.rating.count,
+    bestRating: 5,
+    worstRating: 1
+  } : undefined,
+  image: [
+    location.data.images?.storefront,
+    location.data.images?.workshop,
+    location.data.images?.team
+  ].filter(Boolean),
+  sameAs: [
+    location.data.social?.facebook,
+    location.data.social?.linkedin,
+    location.data.social?.googleBusiness
+  ].filter(Boolean)
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Home',
+      item: Astro.site
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'Locations',
+      item: `${Astro.site}locations/`
+    },
+    {
+      '@type': 'ListItem',
+      position: 3,
+      name: location.data.city,
+      item: canonicalURL
+    }
+  ]
+};
+---
+
+<BaseLayout 
+  title={`Metal Fabrication ${location.data.city} | CMF ${location.data.address.province}`}
+  description={`Professional metal fabrication services in ${location.data.city}, ${location.data.address.province}. Laser cutting, welding, custom fabrication. Serving ${location.data.serviceAreas.join(', ')}. Call ${location.data.phone}`}
+  keywords={`metal fabrication ${location.data.city}, laser cutting ${location.data.city}, welding ${location.data.city}, custom metal work ${location.data.address.province}`}
+  canonical={canonicalURL.toString()}
+  openGraph={{
+    title: `CMF ${location.data.city} - Metal Fabrication Services`,
+    description: location.data.description,
+    image: location.data.images?.storefront || '/images/location-default-og.jpg',
+    type: 'business.business'
+  }}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(localBusinessSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  
+  <Breadcrumbs items={[
+    { label: 'Home', href: '/' },
+    { label: 'Locations', href: '/locations/' },
+    { label: location.data.city, href: `/locations/${location.slug}/` }
+  ]} />
+
+  <article class="location-page">
+    <header class="location-hero">
+      <div class="container">
+        <div class="hero-grid">
+          <div class="hero-content">
+            <h1 class="hero-title">
+              Metal Fabrication Services in {location.data.city}, {location.data.address.province}
+            </h1>
+            <p class="hero-description">{location.data.description}</p>
+            
+            <div class="hero-actions">
+              <a href={`tel:${location.data.phone}`} class="btn btn-primary btn-lg">
+                <svg class="icon" aria-hidden="true">
+                  <use href="#icon-phone"></use>
+                </svg>
+                Call {location.data.phone}
+              </a>
+              <a href="#contact-form" class="btn btn-secondary btn-lg">
+                Get Directions
+              </a>
+            </div>
+
+            <div class="location-badges">
+              <div class="badge">
+                <svg class="icon" aria-hidden="true">
+                  <use href="#icon-clock"></use>
+                </svg>
+                {location.data.hours[0].days}: {location.data.hours[0].open} - {location.data.hours[0].close}
+              </div>
+              {location.data.rating && (
+                <div class="badge">
+                  <svg class="icon" aria-hidden="true">
+                    <use href="#icon-star"></use>
+                  </svg>
+                  {location.data.rating.value} ({location.data.rating.count} reviews)
+                </div>
+              )}
+              <div class="badge">
+                <svg class="icon" aria-hidden="true">
+                  <use href="#icon-truck"></use>
+                </svg>
+                Serving {location.data.serviceAreas.length} Areas
+              </div>
+            </div>
+          </div>
+
+          <div class="location-info-card">
+            <h2>Visit Our {location.data.city} Facility</h2>
+            <address class="location-address">
+              <strong>Address:</strong><br />
+              {location.data.address.street}<br />
+              {location.data.address.city}, {location.data.address.province} {location.data.address.postalCode}
+            </address>
+            
+            <div class="location-contact">
+              <div class="contact-item">
+                <strong>Phone:</strong>
+                <a href={`tel:${location.data.phone}`}>{location.data.phone}</a>
+              </div>
+              <div class="contact-item">
+                <strong>Email:</strong>
+                <a href={`mailto:${location.data.email}`}>{location.data.email}</a>
+              </div>
+            </div>
+
+            <div class="location-hours">
+              <h3>Business Hours</h3>
+              <table class="hours-table">
+                <tbody>
+                  {location.data.hours.map(hour => (
+                    <tr>
+                      <td>{hour.days}</td>
+                      <td>{hour.open} - {hour.close}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="map-section">
+      <div class="container">
+        <Map 
+          lat={location.data.coordinates.lat}
+          lng={location.data.coordinates.lng}
+          title={`CMF ${location.data.city}`}
+          address={`${location.data.address.street}, ${location.data.address.city}`}
+        />
+      </div>
+    </section>
+
+    <section class="services-section">
+      <div class="container">
+        <h2>Services Available at Our {location.data.city} Location</h2>
+        <div class="services-grid">
+          {location.data.services.map(service => (
+            <article class="service-card">
+              <div class="service-icon">
+                <svg class="icon" aria-hidden="true">
+                  <use href={`#icon-${service.icon || 'gear'}`}></use>
+                </svg>
+              </div>
+              <h3>{service.name}</h3>
+              <p>{service.description}</p>
+              <ul class="service-features">
+                {service.features?.map(feature => (
+                  <li>{feature}</li>
+                ))}
+              </ul>
+              <a href={`/services/${service.slug}/`} class="btn btn-outline btn-sm">
+                Learn More →
+              </a>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="service-areas">
+      <div class="container">
+        <h2>Areas We Serve from {location.data.city}</h2>
+        <div class="areas-content">
+          <p class="areas-intro">
+            Our {location.data.city} facility provides professional metal fabrication services to businesses throughout the Greater {location.data.city} Area and beyond.
+          </p>
+          <div class="areas-grid">
+            {location.data.serviceAreas.map(area => (
+              <div class="area-item">
+                <svg class="icon" aria-hidden="true">
+                  <use href="#icon-location"></use>
+                </svg>
+                <span>{area}</span>
+              </div>
+            ))}
+          </div>
+          <p class="areas-note">
+            <strong>Delivery Available:</strong> We offer delivery services to all listed areas. 
+            Contact us for delivery options and scheduling.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="capabilities-section">
+      <div class="container">
+        <Content />
+      </div>
+    </section>
+
+    {location.data.testimonials && (
+      <section class="testimonials-section">
+        <div class="container">
+          <h2>What Our {location.data.city} Clients Say</h2>
+          <div class="testimonials-grid">
+            {location.data.testimonials.map(testimonial => (
+              <blockquote class="testimonial">
+                <p>"{testimonial.text}"</p>
+                <footer>
+                  <cite>
+                    <strong>{testimonial.author}</strong>
+                    <span>{testimonial.company}</span>
+                  </cite>
+                  {testimonial.rating && (
+                    <div class="rating">
+                      {[...Array(5)].map((_, i) => (
+                        <svg class={`star ${i < testimonial.rating ? 'filled' : ''}`} aria-hidden="true">
+                          <use href="#icon-star"></use>
+                        </svg>
+                      ))}
+                    </div>
+                  )}
+                </footer>
+              </blockquote>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <CTASection 
+      title={`Need Metal Fabrication in ${location.data.city}?`}
+      description="Get a free quote for your project today"
+      primaryAction={{ text: `Call ${location.data.phone}`, href: `tel:${location.data.phone}` }}
+      secondaryAction={{ text: 'Request Quote Online', href: '#quote-form' }}
+    />
+
+    <section class="location-seo-content">
+      <div class="container">
+        <h2>Why Choose CMF {location.data.city}?</h2>
+        <div class="seo-content-grid">
+          <div class="seo-block">
+            <h3>Local Expertise</h3>
+            <p>
+              With over 20 years serving {location.data.city} and surrounding areas, 
+              we understand the unique needs of local businesses. Our team combines 
+              cutting-edge technology with traditional craftsmanship to deliver 
+              exceptional results.
+            </p>
+          </div>
+          <div class="seo-block">
+            <h3>Quick Turnaround</h3>
+            <p>
+              Located in the heart of {location.data.city}, our facility enables fast 
+              turnaround times for urgent projects. Same-day service available for 
+              select services.
+            </p>
+          </div>
+          <div class="seo-block">
+            <h3>Competitive Pricing</h3>
+            <p>
+              We offer competitive pricing for metal fabrication services in {location.data.city}. 
+              Get a free quote and discover why businesses throughout {location.data.address.province} 
+              choose CMF.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </article>
+
+  <div id="quote-form" class="quote-form-modal">
+    <!-- React quote form component will be mounted here -->
+  </div>
+</BaseLayout>
+
+<style>
+  .location-page {
+    padding-top: var(--header-height);
+  }
+
+  .location-hero {
+    background: linear-gradient(135deg, var(--color-primary-50) 0%, var(--color-primary-100) 100%);
+    padding: 4rem 0;
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .hero-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    color: var(--color-primary-900);
+  }
+
+  .hero-description {
+    font-size: 1.25rem;
+    color: var(--color-primary-700);
+    margin-bottom: 2rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .location-badges {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: white;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .location-info-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  .location-address {
+    font-style: normal;
+    margin: 1rem 0;
+    line-height: 1.6;
+  }
+
+  .location-contact {
+    margin: 1.5rem 0;
+  }
+
+  .contact-item {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .hours-table {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  .hours-table td {
+    padding: 0.25rem 0;
+  }
+
+  .hours-table td:first-child {
+    font-weight: 600;
+  }
+
+  .map-section {
+    padding: 3rem 0;
+    background: var(--color-gray-50);
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .service-card {
+    background: white;
+    border-radius: 0.75rem;
+    padding: 2rem;
+    border: 1px solid var(--color-gray-200);
+    transition: all 0.3s;
+  }
+
+  .service-card:hover {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .service-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--color-primary-100);
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+
+  .service-features {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+  }
+
+  .service-features li {
+    padding: 0.25rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+
+  .service-features li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--color-success-600);
+    font-weight: bold;
+  }
+
+  .areas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+
+  .area-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: white;
+    border: 1px solid var(--color-gray-200);
+    border-radius: 0.5rem;
+  }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .testimonial {
+    background: white;
+    padding: 2rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  .rating {
+    display: flex;
+    gap: 0.25rem;
+    margin-top: 0.5rem;
+  }
+
+  .star {
+    width: 16px;
+    height: 16px;
+    color: var(--color-gray-300);
+  }
+
+  .star.filled {
+    color: var(--color-warning-500);
+  }
+
+  .seo-content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .seo-block h3 {
+    margin-bottom: 1rem;
+    color: var(--color-primary-700);
+  }
+
+  @media (max-width: 1024px) {
+    .hero-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .location-info-card {
+      max-width: 600px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .hero-actions {
+      flex-direction: column;
+    }
+
+    .hero-actions .btn {
+      width: 100%;
+    }
+  }
+</style>

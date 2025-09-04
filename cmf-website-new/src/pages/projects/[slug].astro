@@ -1,0 +1,652 @@
+---
+import { getCollection } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ProjectGallery from '../../components/ProjectGallery.astro';
+import RelatedProjects from '../../components/RelatedProjects.astro';
+import CTASection from '../../components/CTASection.astro';
+import type { CollectionEntry } from 'astro:content';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const projects = await getCollection('projects');
+  
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+};
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { Content } = await project.render();
+
+const canonicalURL = new URL(`/projects/${project.slug}/`, Astro.site);
+
+const projectSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  name: project.data.title,
+  description: project.data.description,
+  url: canonicalURL.toString(),
+  dateCreated: project.data.completionDate,
+  creator: {
+    '@type': 'Organization',
+    name: 'Canadian Metal Fabricators',
+    url: Astro.site
+  },
+  locationCreated: {
+    '@type': 'Place',
+    name: project.data.location
+  },
+  keywords: project.data.tags?.join(', '),
+  image: project.data.images?.map(img => ({
+    '@type': 'ImageObject',
+    url: new URL(img.url, Astro.site).toString(),
+    caption: img.alt
+  })),
+  about: {
+    '@type': 'Thing',
+    name: project.data.industry
+  }
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Home',
+      item: Astro.site
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'Projects',
+      item: `${Astro.site}projects/`
+    },
+    {
+      '@type': 'ListItem',
+      position: 3,
+      name: project.data.title,
+      item: canonicalURL
+    }
+  ]
+};
+
+const reviewSchema = project.data.testimonial ? {
+  '@context': 'https://schema.org',
+  '@type': 'Review',
+  itemReviewed: {
+    '@type': 'CreativeWork',
+    name: project.data.title
+  },
+  author: {
+    '@type': 'Person',
+    name: project.data.testimonial.author
+  },
+  reviewBody: project.data.testimonial.text,
+  reviewRating: {
+    '@type': 'Rating',
+    ratingValue: project.data.testimonial.rating || 5,
+    bestRating: 5
+  }
+} : null;
+---
+
+<BaseLayout 
+  title={`${project.data.title} - Metal Fabrication Project | CMF`}
+  description={project.data.metaDescription || project.data.description}
+  keywords={`${project.data.industry} metal fabrication, ${project.data.services?.join(', ')}, custom metal work portfolio`}
+  canonical={canonicalURL.toString()}
+  openGraph={{
+    title: project.data.title,
+    description: project.data.description,
+    image: project.data.featuredImage || project.data.images?.[0]?.url || '/images/project-default-og.jpg',
+    type: 'article'
+  }}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(projectSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  {reviewSchema && <script type="application/ld+json" set:html={JSON.stringify(reviewSchema)} />}
+  
+  <Breadcrumbs items={[
+    { label: 'Home', href: '/' },
+    { label: 'Projects', href: '/projects/' },
+    { label: project.data.title, href: `/projects/${project.slug}/` }
+  ]} />
+
+  <article class="project-page">
+    <header class="project-hero">
+      <div class="container">
+        <div class="hero-content">
+          <div class="project-meta">
+            <span class="industry-badge">{project.data.industry}</span>
+            <time datetime={project.data.completionDate}>
+              {new Date(project.data.completionDate).toLocaleDateString('en-CA', { 
+                year: 'numeric', 
+                month: 'long' 
+              })}
+            </time>
+          </div>
+          
+          <h1 class="project-title">{project.data.title}</h1>
+          <p class="project-description">{project.data.description}</p>
+
+          <div class="project-stats">
+            {project.data.stats?.map(stat => (
+              <div class="stat-item">
+                <span class="stat-value">{stat.value}</span>
+                <span class="stat-label">{stat.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </header>
+
+    {project.data.featuredImage && (
+      <section class="featured-image-section">
+        <div class="container">
+          <figure class="featured-image">
+            <img 
+              src={project.data.featuredImage}
+              alt={project.data.featuredImageAlt || project.data.title}
+              loading="eager"
+              fetchpriority="high"
+              width="1200"
+              height="675"
+            />
+          </figure>
+        </div>
+      </section>
+    )}
+
+    <section class="project-details">
+      <div class="container">
+        <div class="details-grid">
+          <aside class="project-sidebar">
+            <div class="sticky-sidebar">
+              <div class="project-info-card">
+                <h2>Project Details</h2>
+                
+                <dl class="info-list">
+                  <dt>Client</dt>
+                  <dd>{project.data.client}</dd>
+                  
+                  <dt>Location</dt>
+                  <dd>{project.data.location}</dd>
+                  
+                  <dt>Completion Date</dt>
+                  <dd>{new Date(project.data.completionDate).toLocaleDateString('en-CA', { 
+                    year: 'numeric', 
+                    month: 'long',
+                    day: 'numeric'
+                  })}</dd>
+                  
+                  <dt>Duration</dt>
+                  <dd>{project.data.duration}</dd>
+                  
+                  <dt>Services Provided</dt>
+                  <dd>
+                    <ul class="services-list">
+                      {project.data.services?.map(service => (
+                        <li>
+                          <a href={`/services/${service.toLowerCase().replace(/\s+/g, '-')}/`}>
+                            {service}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </dd>
+                </dl>
+              </div>
+
+              <div class="cta-card">
+                <h3>Have a Similar Project?</h3>
+                <p>Let's discuss how we can help bring your vision to life.</p>
+                <a href="#quote-form" class="btn btn-primary btn-block">
+                  Get Your Quote
+                </a>
+                <a href="/contact/" class="btn btn-outline btn-block">
+                  Contact Our Team
+                </a>
+              </div>
+            </div>
+          </aside>
+
+          <main class="project-content">
+            <section class="challenge-section">
+              <h2>The Challenge</h2>
+              <p>{project.data.challenge}</p>
+            </section>
+
+            <section class="solution-section">
+              <h2>Our Solution</h2>
+              <Content />
+            </section>
+
+            {project.data.process && (
+              <section class="process-section">
+                <h2>Project Process</h2>
+                <ol class="process-list">
+                  {project.data.process.map((step, index) => (
+                    <li class="process-step">
+                      <div class="step-number">{index + 1}</div>
+                      <div class="step-content">
+                        <h3>{step.title}</h3>
+                        <p>{step.description}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            )}
+
+            {project.data.specifications && (
+              <section class="specifications-section">
+                <h2>Technical Specifications</h2>
+                <div class="specs-grid">
+                  {Object.entries(project.data.specifications).map(([key, value]) => (
+                    <div class="spec-item">
+                      <dt>{key.replace(/([A-Z])/g, ' $1').trim()}</dt>
+                      <dd>{value}</dd>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {project.data.results && (
+              <section class="results-section">
+                <h2>Results & Impact</h2>
+                <div class="results-content">
+                  <p>{project.data.results.summary}</p>
+                  {project.data.results.metrics && (
+                    <div class="metrics-grid">
+                      {project.data.results.metrics.map(metric => (
+                        <div class="metric-card">
+                          <span class="metric-value">{metric.value}</span>
+                          <span class="metric-label">{metric.label}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </section>
+            )}
+          </main>
+        </div>
+      </div>
+    </section>
+
+    {project.data.images && project.data.images.length > 1 && (
+      <ProjectGallery 
+        images={project.data.images}
+        projectTitle={project.data.title}
+      />
+    )}
+
+    {project.data.testimonial && (
+      <section class="testimonial-section">
+        <div class="container">
+          <blockquote class="project-testimonial">
+            <svg class="quote-icon" aria-hidden="true">
+              <use href="#icon-quote"></use>
+            </svg>
+            <p class="testimonial-text">"{project.data.testimonial.text}"</p>
+            <footer class="testimonial-footer">
+              <cite>
+                <strong>{project.data.testimonial.author}</strong>
+                <span>{project.data.testimonial.position}</span>
+                <span>{project.data.client}</span>
+              </cite>
+              {project.data.testimonial.rating && (
+                <div class="rating">
+                  {[...Array(5)].map((_, i) => (
+                    <svg class={`star ${i < project.data.testimonial.rating ? 'filled' : ''}`} aria-hidden="true">
+                      <use href="#icon-star"></use>
+                    </svg>
+                  ))}
+                </div>
+              )}
+            </footer>
+          </blockquote>
+        </div>
+      </section>
+    )}
+
+    <RelatedProjects 
+      currentProject={project.slug}
+      industry={project.data.industry}
+      services={project.data.services}
+    />
+
+    <CTASection 
+      title="Start Your Metal Fabrication Project"
+      description="From concept to completion, we deliver precision-crafted solutions"
+      primaryAction={{ text: 'Get Free Quote', href: '#quote-form' }}
+      secondaryAction={{ text: 'View More Projects', href: '/projects/' }}
+    />
+  </article>
+
+  <div id="quote-form" class="quote-form-modal">
+    <!-- React quote form component will be mounted here -->
+  </div>
+</BaseLayout>
+
+<style>
+  .project-page {
+    padding-top: var(--header-height);
+  }
+
+  .project-hero {
+    background: linear-gradient(135deg, var(--color-gray-900) 0%, var(--color-gray-800) 100%);
+    color: white;
+    padding: 4rem 0;
+  }
+
+  .project-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .industry-badge {
+    padding: 0.375rem 0.75rem;
+    background: var(--color-primary-500);
+    color: white;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .project-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+
+  .project-description {
+    font-size: 1.25rem;
+    opacity: 0.9;
+    max-width: 800px;
+    margin-bottom: 2rem;
+  }
+
+  .project-stats {
+    display: flex;
+    gap: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-primary-400);
+  }
+
+  .stat-label {
+    font-size: 0.875rem;
+    opacity: 0.8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .featured-image-section {
+    margin-top: -4rem;
+    padding: 0 0 3rem;
+  }
+
+  .featured-image {
+    margin: 0;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  }
+
+  .featured-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .details-grid {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 3rem;
+    margin-top: 3rem;
+  }
+
+  .sticky-sidebar {
+    position: sticky;
+    top: calc(var(--header-height) + 2rem);
+  }
+
+  .project-info-card,
+  .cta-card {
+    background: white;
+    border-radius: 0.75rem;
+    padding: 2rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+  }
+
+  .info-list dt {
+    font-weight: 600;
+    color: var(--color-gray-600);
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 1rem;
+  }
+
+  .info-list dd {
+    margin: 0.5rem 0 1rem;
+    color: var(--color-gray-800);
+  }
+
+  .services-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .services-list li {
+    padding: 0.25rem 0;
+  }
+
+  .services-list a {
+    color: var(--color-primary-600);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .services-list a:hover {
+    color: var(--color-primary-700);
+    text-decoration: underline;
+  }
+
+  .process-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 2rem;
+  }
+
+  .process-step {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .step-number {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    background: var(--color-primary-100);
+    color: var(--color-primary-700);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.25rem;
+  }
+
+  .specs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .spec-item {
+    padding: 1rem;
+    background: var(--color-gray-50);
+    border-radius: 0.5rem;
+  }
+
+  .spec-item dt {
+    font-weight: 600;
+    color: var(--color-gray-600);
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .spec-item dd {
+    margin: 0;
+    font-size: 1.125rem;
+    color: var(--color-gray-900);
+  }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .metric-card {
+    text-align: center;
+    padding: 1.5rem;
+    background: var(--color-primary-50);
+    border-radius: 0.75rem;
+  }
+
+  .metric-value {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-primary-700);
+    margin-bottom: 0.5rem;
+  }
+
+  .metric-label {
+    font-size: 0.875rem;
+    color: var(--color-gray-600);
+  }
+
+  .testimonial-section {
+    background: var(--color-gray-50);
+    padding: 4rem 0;
+  }
+
+  .project-testimonial {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+  }
+
+  .quote-icon {
+    width: 48px;
+    height: 48px;
+    color: var(--color-primary-200);
+    margin-bottom: 1rem;
+  }
+
+  .testimonial-text {
+    font-size: 1.5rem;
+    line-height: 1.6;
+    color: var(--color-gray-800);
+    margin-bottom: 2rem;
+  }
+
+  .testimonial-footer cite {
+    display: block;
+    font-style: normal;
+  }
+
+  .testimonial-footer strong {
+    display: block;
+    font-size: 1.125rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .testimonial-footer span {
+    display: block;
+    color: var(--color-gray-600);
+    font-size: 0.875rem;
+  }
+
+  .rating {
+    display: flex;
+    justify-content: center;
+    gap: 0.25rem;
+    margin-top: 1rem;
+  }
+
+  .star {
+    width: 20px;
+    height: 20px;
+    color: var(--color-gray-300);
+  }
+
+  .star.filled {
+    color: var(--color-warning-500);
+  }
+
+  @media (max-width: 1024px) {
+    .details-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .sticky-sidebar {
+      position: static;
+    }
+
+    .project-sidebar {
+      order: 2;
+    }
+
+    .project-content {
+      order: 1;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .project-stats {
+      gap: 1.5rem;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+    }
+
+    .testimonial-text {
+      font-size: 1.25rem;
+    }
+  }
+</style>

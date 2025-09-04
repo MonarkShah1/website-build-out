@@ -1,0 +1,163 @@
+---
+/**
+ * Optimized Image Component
+ * Handles lazy loading, responsive images, and Core Web Vitals optimization
+ */
+
+export interface Props {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  loading?: 'lazy' | 'eager';
+  priority?: boolean;
+  sizes?: string;
+  class?: string;
+  quality?: number;
+  format?: 'webp' | 'avif' | 'jpeg' | 'png';
+  placeholder?: 'blur' | 'empty' | 'tracedSVG';
+}
+
+const {
+  src,
+  alt,
+  width,
+  height,
+  loading = 'lazy',
+  priority = false,
+  sizes = '100vw',
+  class: className = '',
+  quality = 85,
+  format = 'webp',
+  placeholder = 'blur',
+} = Astro.props;
+
+// Generate responsive sizes
+const widths = [320, 640, 768, 1024, 1280, 1536, 1920];
+const srcset = widths
+  .map(w => `${src}?w=${w}&q=${quality}&fm=${format} ${w}w`)
+  .join(', ');
+
+// Calculate aspect ratio to prevent CLS
+const aspectRatio = width && height ? `${width}/${height}` : '16/9';
+
+// Generate placeholder
+const placeholderSrc = placeholder === 'blur' 
+  ? `${src}?w=40&q=10&blur=20&fm=${format}`
+  : 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"%3E%3C/svg%3E';
+
+// Priority images should not be lazy loaded
+const actualLoading = priority ? 'eager' : loading;
+const fetchPriority = priority ? 'high' : undefined;
+const decoding = priority ? 'sync' : 'async';
+---
+
+<picture class={`optimized-image ${className}`}>
+  <!-- Modern formats -->
+  <source
+    type="image/avif"
+    srcset={srcset.replace(/fm=\w+/g, 'fm=avif')}
+    sizes={sizes}
+  />
+  <source
+    type="image/webp"
+    srcset={srcset}
+    sizes={sizes}
+  />
+  
+  <!-- Fallback -->
+  <img
+    src={priority ? src : placeholderSrc}
+    data-src={!priority ? src : undefined}
+    srcset={priority ? srcset : undefined}
+    data-srcset={!priority ? srcset : undefined}
+    sizes={sizes}
+    alt={alt}
+    width={width}
+    height={height}
+    loading={actualLoading}
+    decoding={decoding}
+    fetchpriority={fetchPriority}
+    style={`aspect-ratio: ${aspectRatio};`}
+    class={`optimized-img ${!priority ? 'lazy-image' : ''}`}
+    data-lazy={!priority ? 'true' : undefined}
+  />
+</picture>
+
+<style>
+  .optimized-image {
+    display: block;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .optimized-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+  .lazy-image {
+    opacity: 0;
+    filter: blur(5px);
+  }
+  
+  .lazy-image.lazy-loaded {
+    opacity: 1;
+    filter: blur(0);
+  }
+  
+  /* Prevent layout shift */
+  .optimized-img[width][height] {
+    height: auto;
+  }
+  
+  /* Loading skeleton */
+  .lazy-image:not(.lazy-loaded) {
+    background: linear-gradient(
+      90deg,
+      #f0f0f0 25%,
+      #e0e0e0 50%,
+      #f0f0f0 75%
+    );
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+  }
+  
+  @keyframes loading {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+  
+  /* Reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    .optimized-img {
+      transition: none;
+    }
+    
+    .lazy-image:not(.lazy-loaded) {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  // Initialize lazy loading when component is loaded
+  import { initLazyLoading } from '../utils/imageOptimization';
+  
+  // Run on page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initLazyLoading);
+  } else {
+    initLazyLoading();
+  }
+  
+  // Re-run on navigation (for SPAs)
+  document.addEventListener('astro:page-load', initLazyLoading);
+</script>

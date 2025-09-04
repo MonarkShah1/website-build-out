@@ -1,0 +1,649 @@
+---
+/**
+ * Homepage - SEO Optimized
+ * Core landing page with comprehensive SEO implementation
+ */
+
+import Layout from '../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+import { measurePerformance } from '../utils/webVitals';
+
+// SEO data for homepage with complete metadata
+const seoData = {
+  title: 'Custom Metal Fabrication Toronto | Laser Cutting & Welding - CMF',
+  description: 'Canadian Metal Fabricators: Toronto\'s trusted custom metal fabrication shop. Precision laser cutting, CNC bending & welding. Same-day quotes, fast turnaround. ISO 9001 certified.',
+  keywords: [
+    'metal fabrication toronto',
+    'laser cutting services toronto',
+    'cnc metal bending',
+    'custom metal parts canada',
+    'instant quote metal fabrication',
+    'sheet metal fabrication toronto',
+    'welding services gta',
+    'steel fabrication ontario',
+    'aluminum fabrication toronto',
+    'stainless steel cutting'
+  ],
+  canonical: 'https://www.canadianmetalfab.com/',
+  openGraph: {
+    title: 'Custom Metal Fabrication Services in Toronto | Canadian Metal Fabricators',
+    description: 'Get instant quotes for precision metal fabrication. Laser cutting, bending, welding. Fast turnaround, competitive pricing. Serving Toronto & GTA since 1985.',
+    image: '/images/og-home.jpg',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Custom Metal Fabrication Toronto - Instant Quotes | CMF',
+    description: 'Upload your CAD files for instant metal fabrication quotes. Precision laser cutting & welding. Same-day service available.',
+    image: '/images/twitter-home.jpg',
+  },
+};
+
+// Preload critical resources
+const criticalResources = [
+  { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+  { rel: 'dns-prefetch', href: 'https://www.googletagmanager.com' },
+  { rel: 'preload', href: '/fonts/inter-var.woff2', as: 'font', type: 'font/woff2', crossorigin: 'anonymous' },
+];
+---
+
+<Layout {...seoData} resourceHints={criticalResources}>
+  <section class="hero" itemscope itemtype="https://schema.org/Service">
+    <div class="container">
+      <h1 itemprop="name">Professional Metal Fabrication Services in Toronto</h1>
+      <p class="lead" itemprop="description">
+        Get instant quotes for precision laser cutting, bending, and welding services.
+        Upload your CAD files and receive competitive pricing in minutes.
+      </p>
+      <div class="cta-group">
+        <a href="/instant-quote" class="cta-button primary" aria-label="Get an instant quote for metal fabrication">
+          <span>Get Instant Quote</span>
+          <span class="cta-icon" aria-hidden="true">→</span>
+        </a>
+        <a href="tel:+14165550123" class="cta-button secondary" aria-label="Call us at 416-555-0123">
+          <span>Call: (416) 555-0123</span>
+        </a>
+      </div>
+      <div class="trust-indicators">
+        <span class="indicator">
+          <strong>500+</strong> Projects Completed
+        </span>
+        <span class="indicator">
+          <strong>24hr</strong> Turnaround Available
+        </span>
+        <span class="indicator">
+          <strong>ISO 9001</strong> Certified
+        </span>
+      </div>
+    </div>
+  </section>
+  
+  <section class="services" aria-labelledby="services-heading">
+    <div class="container">
+      <h2 id="services-heading">Our Metal Fabrication Services</h2>
+      <div class="services-grid">
+        <article class="service-card" itemscope itemtype="https://schema.org/Service">
+          <div class="service-icon" aria-hidden="true">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+            </svg>
+          </div>
+          <h3 itemprop="name">Laser Cutting</h3>
+          <p itemprop="description">Precision cutting up to 1" thick steel with ±0.005" tolerance</p>
+          <ul class="service-features">
+            <li>Materials: Steel, Aluminum, Stainless</li>
+            <li>Max thickness: 1" (25mm)</li>
+            <li>Tolerance: ±0.005" (±0.13mm)</li>
+          </ul>
+          <a href="/services/laser-cutting" class="service-link" aria-label="Learn more about laser cutting services">
+            Learn More <span aria-hidden="true">→</span>
+          </a>
+        </article>
+        
+        <article class="service-card" itemscope itemtype="https://schema.org/Service">
+          <div class="service-icon" aria-hidden="true">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            </svg>
+          </div>
+          <h3 itemprop="name">Metal Bending</h3>
+          <p itemprop="description">CNC press brake forming for accurate and repeatable bends</p>
+          <ul class="service-features">
+            <li>Max length: 12ft (3.6m)</li>
+            <li>Tonnage: 175 tons</li>
+            <li>Angle accuracy: ±0.5°</li>
+          </ul>
+          <a href="/services/metal-bending" class="service-link" aria-label="Learn more about metal bending services">
+            Learn More <span aria-hidden="true">→</span>
+          </a>
+        </article>
+        
+        <article class="service-card" itemscope itemtype="https://schema.org/Service">
+          <div class="service-icon" aria-hidden="true">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 6v6l4 2"/>
+            </svg>
+          </div>
+          <h3 itemprop="name">Welding & Assembly</h3>
+          <p itemprop="description">Professional MIG, TIG, and spot welding services</p>
+          <ul class="service-features">
+            <li>MIG, TIG, Spot welding</li>
+            <li>AWS certified welders</li>
+            <li>Full assembly services</li>
+          </ul>
+          <a href="/services/welding" class="service-link" aria-label="Learn more about welding services">
+            Learn More <span aria-hidden="true">→</span>
+          </a>
+        </article>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Materials Section -->
+  <section class="materials" aria-labelledby="materials-heading">
+    <div class="container">
+      <h2 id="materials-heading">Materials We Work With</h2>
+      <div class="materials-grid">
+        <div class="material-card">
+          <h3>Steel</h3>
+          <p>Hot rolled, cold rolled, galvanized</p>
+        </div>
+        <div class="material-card">
+          <h3>Aluminum</h3>
+          <p>5052, 6061, 7075 alloys</p>
+        </div>
+        <div class="material-card">
+          <h3>Stainless Steel</h3>
+          <p>304, 316, 430 grades</p>
+        </div>
+        <div class="material-card">
+          <h3>Specialty Metals</h3>
+          <p>Brass, copper, titanium</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- CTA Section -->
+  <section class="cta-section" aria-labelledby="cta-heading">
+    <div class="container">
+      <h2 id="cta-heading">Ready to Start Your Project?</h2>
+      <p class="cta-description">
+        Upload your CAD files now and get an instant quote. No account required.
+      </p>
+      <div class="cta-buttons">
+        <a href="/instant-quote" class="cta-button primary large">
+          Get Instant Quote
+        </a>
+        <a href="/contact" class="cta-button secondary large">
+          Contact Us
+        </a>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Comprehensive Structured Data -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://www.canadianmetalfab.com/#organization",
+          "name": "Canadian Metal Fabricators",
+          "alternateName": "CMF",
+          "url": "https://www.canadianmetalfab.com",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.canadianmetalfab.com/images/logo.png",
+            "width": 600,
+            "height": 60
+          },
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+1-416-555-0123",
+            "contactType": "sales",
+            "areaServed": "CA",
+            "availableLanguage": ["English", "French"]
+          },
+          "sameAs": [
+            "https://www.facebook.com/canadianmetalfab",
+            "https://www.linkedin.com/company/canadian-metal-fabricators",
+            "https://www.youtube.com/@canadianmetalfab"
+          ]
+        },
+        {
+          "@type": "LocalBusiness",
+          "@id": "https://www.canadianmetalfab.com/#localbusiness",
+          "name": "Canadian Metal Fabricators",
+          "image": [
+            "https://www.canadianmetalfab.com/images/facility-1x1.jpg",
+            "https://www.canadianmetalfab.com/images/facility-4x3.jpg",
+            "https://www.canadianmetalfab.com/images/facility-16x9.jpg"
+          ],
+          "priceRange": "$$",
+          "url": "https://www.canadianmetalfab.com",
+          "telephone": "+1-416-555-0123",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "123 Industrial Way",
+            "addressLocality": "Toronto",
+            "addressRegion": "ON",
+            "postalCode": "M1B 2C3",
+            "addressCountry": "CA"
+          },
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 43.7615,
+            "longitude": -79.2656
+          },
+          "openingHoursSpecification": [
+            {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+              "opens": "08:00",
+              "closes": "17:00"
+            },
+            {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": "Saturday",
+              "opens": "09:00",
+              "closes": "13:00"
+            }
+          ],
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "reviewCount": "127"
+          },
+          "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Metal Fabrication Services",
+            "itemListElement": [
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Laser Cutting",
+                  "description": "Precision laser cutting up to 1\" thick steel"
+                }
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "CNC Bending",
+                  "description": "Accurate metal bending with CNC press brakes"
+                }
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Welding Services",
+                  "description": "MIG, TIG, and spot welding services"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://www.canadianmetalfab.com/#website",
+          "url": "https://www.canadianmetalfab.com",
+          "name": "Canadian Metal Fabricators",
+          "description": "Custom metal fabrication services in Toronto",
+          "publisher": {
+            "@id": "https://www.canadianmetalfab.com/#organization"
+          },
+          "potentialAction": [
+            {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://www.canadianmetalfab.com/search?q={search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
+            }
+          ],
+          "inLanguage": "en-CA"
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": "https://www.canadianmetalfab.com/#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://www.canadianmetalfab.com"
+            }
+          ]
+        }
+      ]
+    }
+  </script>
+</Layout>
+
+<style>
+  .hero {
+    padding: var(--space-20) 0;
+    background: linear-gradient(135deg, var(--gray-50) 0%, var(--white) 100%);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(0,82,204,0.03) 0%, transparent 70%);
+    animation: pulse 20s ease-in-out infinite;
+  }
+  
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 0.3; }
+  }
+  
+  .hero .container {
+    position: relative;
+    z-index: 1;
+  }
+  
+  h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.2;
+    margin-bottom: var(--space-6);
+    background: linear-gradient(135deg, var(--gray-900) 0%, var(--cmf-blue) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .lead {
+    font-size: clamp(1.125rem, 2vw, 1.375rem);
+    color: var(--gray-600);
+    max-width: 700px;
+    margin: 0 auto var(--space-8);
+    line-height: 1.6;
+  }
+  
+  .cta-group {
+    display: flex;
+    gap: var(--space-4);
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: var(--space-8);
+  }
+  
+  .cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-6);
+    border-radius: var(--radius-lg);
+    font-weight: 600;
+    font-size: var(--text-lg);
+    transition: all var(--transition-fast);
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .cta-button.primary {
+    background: var(--cmf-blue);
+    color: var(--white);
+    box-shadow: 0 4px 14px rgba(0,82,204,0.25);
+  }
+  
+  .cta-button.primary:hover {
+    background: var(--cmf-blue-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,82,204,0.35);
+  }
+  
+  .cta-button.secondary {
+    background: var(--white);
+    color: var(--cmf-blue);
+    border: 2px solid var(--cmf-blue);
+  }
+  
+  .cta-button.secondary:hover {
+    background: var(--gray-50);
+    transform: translateY(-2px);
+  }
+  
+  .cta-button.large {
+    padding: var(--space-4) var(--space-8);
+    font-size: var(--text-xl);
+  }
+  
+  .cta-icon {
+    transition: transform var(--transition-fast);
+  }
+  
+  .cta-button:hover .cta-icon {
+    transform: translateX(4px);
+  }
+  
+  .trust-indicators {
+    display: flex;
+    gap: var(--space-8);
+    justify-content: center;
+    flex-wrap: wrap;
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--gray-200);
+  }
+  
+  .indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-1);
+    color: var(--gray-600);
+    font-size: var(--text-sm);
+  }
+  
+  .indicator strong {
+    display: block;
+    font-size: var(--text-2xl);
+    color: var(--cmf-blue);
+    font-weight: 700;
+  }
+  
+  .services {
+    padding: var(--space-20) 0;
+    background: var(--white);
+  }
+  
+  .services h2,
+  .materials h2,
+  .cta-section h2 {
+    text-align: center;
+    margin-bottom: var(--space-12);
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    color: var(--gray-900);
+  }
+  
+  .services-grid {
+    display: grid;
+    gap: var(--space-8);
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+  
+  .service-card {
+    padding: var(--space-8);
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-xl);
+    text-align: center;
+    transition: all var(--transition-base);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .service-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--cmf-blue) 0%, var(--cmf-accent) 100%);
+    transform: scaleX(0);
+    transition: transform var(--transition-base);
+    transform-origin: left;
+  }
+  
+  .service-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--cmf-blue);
+  }
+  
+  .service-card:hover::before {
+    transform: scaleX(1);
+  }
+  
+  .service-icon {
+    display: inline-flex;
+    padding: var(--space-3);
+    background: var(--gray-50);
+    border-radius: var(--radius-lg);
+    color: var(--cmf-blue);
+    margin-bottom: var(--space-4);
+  }
+  
+  .service-card h3 {
+    color: var(--gray-900);
+    margin-bottom: var(--space-3);
+    font-size: var(--text-2xl);
+  }
+  
+  .service-card p {
+    color: var(--gray-600);
+    margin-bottom: var(--space-4);
+    line-height: 1.6;
+  }
+  
+  .service-features {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-4) 0;
+    text-align: left;
+    color: var(--gray-700);
+    font-size: var(--text-sm);
+  }
+  
+  .service-features li {
+    padding: var(--space-2) 0;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  
+  .service-features li:last-child {
+    border-bottom: none;
+  }
+  
+  .service-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--cmf-blue);
+    font-weight: 600;
+    text-decoration: none;
+    transition: gap var(--transition-fast);
+  }
+  
+  .service-link:hover {
+    gap: var(--space-3);
+    text-decoration: underline;
+  }
+  
+  .materials {
+    padding: var(--space-16) 0;
+    background: var(--gray-50);
+  }
+  
+  .materials-grid {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .material-card {
+    padding: var(--space-6);
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    text-align: center;
+    border: 1px solid var(--gray-200);
+    transition: all var(--transition-fast);
+  }
+  
+  .material-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+  
+  .material-card h3 {
+    color: var(--cmf-blue);
+    margin-bottom: var(--space-2);
+    font-size: var(--text-xl);
+  }
+  
+  .material-card p {
+    color: var(--gray-600);
+    font-size: var(--text-sm);
+  }
+  
+  .cta-section {
+    padding: var(--space-20) 0;
+    background: linear-gradient(135deg, var(--cmf-blue) 0%, #003d99 100%);
+    color: var(--white);
+    text-align: center;
+  }
+  
+  .cta-section h2 {
+    color: var(--white);
+    margin-bottom: var(--space-4);
+  }
+  
+  .cta-description {
+    font-size: var(--text-xl);
+    margin-bottom: var(--space-8);
+    opacity: 0.95;
+  }
+  
+  .cta-buttons {
+    display: flex;
+    gap: var(--space-4);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  @media (max-width: 768px) {
+    .services-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .trust-indicators {
+      gap: var(--space-6);
+    }
+    
+    .cta-group {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .cta-button {
+      justify-content: center;
+    }
+  }
+</style>

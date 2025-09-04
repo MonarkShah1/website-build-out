@@ -1,0 +1,29 @@
+{
+  "name": "cmf-website-new",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/react": "^4.3.0",
+    "@astrojs/sitemap": "^3.5.1",
+    "@hookform/resolvers": "^5.2.1",
+    "@types/node": "^24.3.0",
+    "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.1.9",
+    "astro": "^5.13.5",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-dropzone": "^14.3.8",
+    "react-hook-form": "^7.62.0",
+    "sharp": "^0.34.3",
+    "typescript": "^5.9.2",
+    "web-vitals": "^5.1.0",
+    "zod": "^3.25.76",
+    "zustand": "^5.0.8"
+  }
+}

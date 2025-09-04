@@ -1,0 +1,227 @@
+---
+/**
+ * Main Layout Component
+ * CRITICAL: This layout MUST be used on all pages for consistent SEO
+ */
+
+import SEO from '../components/SEO.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Analytics from '../components/Analytics.astro';
+import '../styles/global.css';
+
+export interface Props {
+  // SEO Props (REQUIRED)
+  title: string;
+  description: string;
+  
+  // Optional SEO
+  keywords?: string[];
+  ogImage?: string;
+  canonicalURL?: string;
+  noIndex?: boolean;
+  canonical?: string;
+  openGraph?: {
+    title?: string;
+    description?: string;
+    image?: string;
+    type?: string;
+  };
+  twitter?: {
+    card?: string;
+    title?: string;
+    description?: string;
+    image?: string;
+  };
+  
+  // Schema type for structured data
+  schemaType?: 'Organization' | 'LocalBusiness' | 'Service' | 'Product' | 'Article' | 'FAQPage';
+  schemaData?: Record<string, any>;
+  
+  // Performance
+  resourceHints?: Array<{
+    rel: string;
+    href: string;
+    as?: string;
+    type?: string;
+    crossorigin?: string;
+  }>;
+  
+  // Page-specific
+  bodyClass?: string;
+  includeHeader?: boolean;
+  includeFooter?: boolean;
+}
+
+const {
+  title,
+  description,
+  keywords = [],
+  ogImage,
+  canonicalURL,
+  canonical,
+  noIndex = false,
+  openGraph,
+  twitter,
+  schemaType = 'Organization',
+  schemaData,
+  resourceHints = [],
+  bodyClass = '',
+  includeHeader = true,
+  includeFooter = true,
+} = Astro.props;
+
+// Validate SEO requirements
+if (!title) {
+  throw new Error('Layout: title prop is required for SEO');
+}
+if (!description) {
+  throw new Error('Layout: description prop is required for SEO');
+}
+---
+
+<!DOCTYPE html>
+<html lang="en-CA">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Resource hints for performance -->
+    {resourceHints.map((hint) => (
+      <link 
+        rel={hint.rel} 
+        href={hint.href}
+        as={hint.as}
+        type={hint.type}
+        crossorigin={hint.crossorigin}
+      />
+    ))}
+    
+    <!-- CRITICAL SEO Component -->
+    <SEO
+      title={title}
+      description={description}
+      keywords={keywords}
+      ogImage={ogImage || openGraph?.image}
+      canonicalURL={canonicalURL || canonical}
+      noIndex={noIndex}
+      schemaType={schemaType}
+      schemaData={schemaData}
+    />
+    
+    <!-- Performance: Preload critical fonts -->
+    <link 
+      rel="preload" 
+      href="/fonts/Inter-Regular.woff2" 
+      as="font" 
+      type="font/woff2" 
+      crossorigin 
+    />
+    <link 
+      rel="preload" 
+      href="/fonts/Inter-Bold.woff2" 
+      as="font" 
+      type="font/woff2" 
+      crossorigin 
+    />
+    
+    <!-- Analytics (loads asynchronously) -->
+    <Analytics />
+  </head>
+  
+  <body class={`min-h-screen flex flex-col ${bodyClass}`}>
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="skip-link">
+      Skip to main content
+    </a>
+    
+    <!-- Header with navigation -->
+    {includeHeader && <Header />}
+    
+    <!-- Main content area -->
+    <main id="main-content" class="flex-grow" tabindex="-1">
+      <slot />
+    </main>
+    
+    <!-- Footer with company info -->
+    {includeFooter && <Footer />}
+    
+    <!-- Web Vitals monitoring -->
+    <script>
+      // Only load on production
+      if (window.location.hostname !== 'localhost') {
+        import('../utils/webVitals').then(({ initWebVitals }) => {
+          initWebVitals();
+        });
+      }
+    </script>
+    
+    <!-- Structured data for WebSite -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "@id": "https://www.canadianmetalfab.com/#website",
+        "url": "https://www.canadianmetalfab.com",
+        "name": "Canadian Metal Fabricators",
+        "publisher": {
+          "@id": "https://www.canadianmetalfab.com/#organization"
+        },
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://www.canadianmetalfab.com/search?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  /* Skip link for accessibility */
+  .skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--cmf-blue, #3A5D9A);
+    color: white;
+    padding: 8px 16px;
+    z-index: 100;
+    text-decoration: none;
+    border-radius: 0 0 8px 0;
+    transition: top 0.3s;
+  }
+  
+  .skip-link:focus {
+    top: 0;
+  }
+  
+  /* Ensure main content can receive focus */
+  [tabindex="-1"]:focus {
+    outline: none;
+  }
+  
+  /* Performance: Reduce CLS by reserving space */
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  /* Critical fonts */
+  @font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('/fonts/Inter-Regular.woff2') format('woff2');
+  }
+  
+  @font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('/fonts/Inter-Bold.woff2') format('woff2');
+  }
+</style>
