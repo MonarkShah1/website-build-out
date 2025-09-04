@@ -26,22 +26,25 @@ const {
   openGraph = {}
 } = Astro.props;
 
+// Ensure description is always defined
+const finalDescription = description || 'Canadian Metal Fabricators - Professional metal fabrication services in Toronto';
+
 const ogTitle = openGraph.title || title;
 const ogDescription = openGraph.description || description;
 const ogImage = openGraph.image || '/images/og-default.jpg';
 const ogType = openGraph.type || 'website';
 ---
 
-<Layout title={title}>
+<Layout title={title} description={finalDescription}>
   <Fragment slot="head">
-    <meta name="description" content={description} />
+    <meta name="description" content={finalDescription} />
     {keywords && <meta name="keywords" content={keywords} />}
     <meta name="robots" content={robots} />
     {canonical && <link rel="canonical" href={canonical} />}
     
     <!-- Open Graph -->
     <meta property="og:title" content={ogTitle} />
-    <meta property="og:description" content={ogDescription} />
+    <meta property="og:description" content={ogDescription || finalDescription} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content="Canadian Metal Fabricators" />
