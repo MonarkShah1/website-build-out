@@ -1,236 +1,161 @@
 ---
 title: "Rogers Centre Structural Steel Renovation"
-metaDescription: "Canadian Metal Fabricators completed custom structural steel fabrication for Rogers Centre's 2023 renovation. Precision laser cut components delivered on schedule."
-slug: "rogers-centre-renovation"
-featured: true
-order: 1
-
-# Project Details
 client: "EllisDon Corporation"
-location: "Toronto, ON"
-completionDate: "2023-08-15"
-projectValue: "$450,000"
-duration: "3 months"
-
-# Categories
-category: "structural"
-tags:
-  - "structural steel"
-  - "architectural metalwork"
-  - "stadium renovation"
-  - "commercial project"
-
-# Services Used
+industry: "Construction & Infrastructure"
 services:
-  - "laser-cutting"
-  - "metal-bending"
-  - "welding"
-  - "powder-coating"
-
-# Project Specifications
-specifications:
-  totalWeight: "85 tons"
-  materials:
-    - type: "A36 Structural Steel"
-      quantity: "65 tons"
-    - type: "Aluminum 6061"
-      quantity: "15 tons"
-    - type: "Stainless Steel 316"
-      quantity: "5 tons"
-  
-  components:
-    - name: "Support Beams"
-      quantity: 45
-      weight: "800 lbs each"
-    - name: "Connector Plates"
-      quantity: 250
-      weight: "50 lbs each"
-    - name: "Custom Brackets"
-      quantity: 500
-      weight: "25 lbs each"
-
-# Images
-images:
-  hero: "/images/projects/rogers-centre/hero.jpg"
-  gallery:
-    - url: "/images/projects/rogers-centre/cutting.jpg"
-      alt: "Laser cutting structural steel plates"
-      caption: "Precision laser cutting of 1-inch steel plates"
-    - url: "/images/projects/rogers-centre/welding.jpg"
-      alt: "Welding structural components"
-      caption: "CWB certified welders assembling main beams"
-    - url: "/images/projects/rogers-centre/installation.jpg"
-      alt: "Installation at Rogers Centre"
-      caption: "Final installation of fabricated components"
-    - url: "/images/projects/rogers-centre/complete.jpg"
-      alt: "Completed renovation"
-      caption: "Finished structural steel work"
-
-# SEO
-keywords:
-  - "rogers centre renovation"
-  - "stadium structural steel"
-  - "toronto metal fabrication project"
-  - "commercial steel fabrication"
-  - "ellisdon subcontractor"
-
-# Testimonial
-testimonial:
-  text: "CMF delivered exceptional quality on a tight timeline. Their attention to detail and ability to handle complex specifications made them invaluable to this project's success."
-  author: "Michael Thompson"
-  title: "Project Manager"
-  company: "EllisDon Corporation"
-  rating: 5
-
-# Results
+  - "Laser Cutting"
+  - "Metal Bending"
+  - "Welding"
+  - "Powder Coating"
+metaDescription: "Custom structural steel fabrication for Rogers Centre's 2023 renovation. 85 tons of precision components delivered on schedule."
+featuredImage:
+  src: "/images/projects/rogers-centre-hero.jpg"
+  alt: "Rogers Centre structural steel installation"
+  caption: "Custom fabricated structural beams being installed at Rogers Centre"
+  width: 1200
+  height: 800
+gallery:
+  - src: "/images/projects/rogers-centre-beam.jpg"
+    alt: "Precision cut steel beam for Rogers Centre"
+    width: 800
+    height: 600
+  - src: "/images/projects/rogers-centre-welding.jpg"
+    alt: "AWS certified welding on structural components"
+    width: 800
+    height: 600
+  - src: "/images/projects/rogers-centre-install.jpg"
+    alt: "Installation of fabricated components"
+    width: 800
+    height: 600
+challenge: "The Rogers Centre renovation required complex structural steel components that needed to integrate seamlessly with the existing 1989 infrastructure. The project demanded precise tolerances, aggressive timelines, and coordination with multiple trades during an active baseball season."
+solution: "Canadian Metal Fabricators leveraged our advanced fiber laser cutting technology and experienced team to deliver 85 tons of structural steel components with tolerances within ±1/16 inch. We implemented a just-in-time delivery schedule to minimize on-site storage and coordinated night shifts to meet the compressed timeline."
 results:
-  - metric: "On-Time Delivery"
-    value: "100%"
-  - metric: "Quality Pass Rate"
-    value: "99.8%"
-  - metric: "Schedule Acceleration"
-    value: "2 weeks ahead"
-  - metric: "Zero Safety Incidents"
-    value: "✓"
-
-# Related Projects
-relatedProjects:
-  - "scotiabank-arena-expansion"
-  - "cn-tower-maintenance"
-  - "union-station-restoration"
-
-publishedDate: 2023-09-01
-lastModified: 2024-12-01
+  - "All 85 tons of structural steel delivered on schedule"
+  - "Zero safety incidents throughout the project"
+  - "Achieved ±1/16 inch tolerance on all critical connections"
+  - "Completed project 5 days ahead of schedule"
+  - "Saved client 12% through material optimization"
+testimonial: "CMF exceeded our expectations on this complex renovation project. Their attention to detail and ability to meet our aggressive timeline was instrumental in the project's success."
+projectSchema:
+  completionDate: 2023-08-15T00:00:00Z
+  materials:
+    - "A36 Structural Steel (65 tons)"
+    - "Aluminum 6061 (15 tons)"
+    - "Stainless Steel 316 (5 tons)"
+  techniques:
+    - "Fiber laser cutting"
+    - "CNC press brake forming"
+    - "MIG welding"
+    - "Powder coating"
+  duration: "3 months"
+  budget: "$450,000"
+keywords:
+  - "Rogers Centre renovation"
+  - "structural steel fabrication Toronto"
+  - "stadium construction metalwork"
+  - "commercial steel fabrication"
+  - "precision metal cutting Toronto"
+priority: 0.9
+publishDate: 2023-09-01T00:00:00Z
 ---
-
-# Rogers Centre Structural Steel Renovation Project
-
-Canadian Metal Fabricators proudly contributed to the 2023 Rogers Centre renovation, delivering 85 tons of precision-fabricated structural steel components for one of Toronto's most iconic venues.
 
 ## Project Overview
 
-When EllisDon Corporation needed a reliable metal fabrication partner for the Rogers Centre renovation, they turned to Canadian Metal Fabricators for our proven track record with large-scale commercial projects. This $450,000 contract required precision fabrication of structural steel components critical to the stadium's modernization efforts.
+The Rogers Centre, Toronto's iconic multi-purpose stadium, underwent a significant structural renovation in 2023 to modernize its facilities and improve fan experience. Canadian Metal Fabricators was selected by EllisDon Corporation as the primary metal fabrication partner for this landmark project.
 
 ### Project Scope
 
-The renovation required:
-- Custom structural steel beams and supports
-- Precision-cut connector plates with complex bolt patterns
-- Specialized brackets for new seating installations
-- Architectural metalwork for public areas
+Our involvement encompassed the complete fabrication of structural steel components for:
+- Upper deck reinforcement systems
+- New concourse support structures  
+- Retractable roof mechanism upgrades
+- Accessibility improvement frameworks
+- Premium seating area enhancements
 
-## Our Approach
+### Technical Challenges
 
-### Phase 1: Design Collaboration
+#### Integration with Existing Structure
+The biggest challenge was creating new structural elements that would seamlessly integrate with the stadium's original 1989 steel framework. Our engineering team conducted extensive field measurements and 3D modeling to ensure perfect fit-up.
 
-Working closely with EllisDon's engineering team, we:
-- Reviewed and optimized designs for manufacturability
-- Suggested cost-saving alternatives without compromising strength
-- Created detailed shop drawings for approval
-- Developed a phased delivery schedule to match construction timeline
+#### Tight Timeline
+With the Blue Jays season ongoing, all work had to be completed during limited windows between home stands. This required precise scheduling and just-in-time delivery of components.
 
-### Phase 2: Precision Fabrication
+#### Complex Geometries
+Many components featured compound angles and curves to match the stadium's unique architecture. Our CNC equipment was essential for achieving the required precision.
 
-Our fabrication process included:
+### Our Solution
 
-**Laser Cutting**: Using our Trumpf TruLaser system, we cut:
-- 250 connector plates with ±0.005" tolerance
-- Complex patterns for architectural panels
-- Precise bolt holes eliminating field drilling
+#### Advanced Planning
+- 3D laser scanning of existing conditions
+- BIM coordination with all trades
+- Detailed shop drawings approved before fabrication
+- Mock-up assembly in our facility
 
-**CNC Forming**: Our press brake operations produced:
-- 45 main support beams with multiple bends
-- Custom angles maintaining ±0.5° accuracy
-- Formed channels for cable management
+#### Precision Manufacturing
+- Fiber laser cutting for all plate components
+- CNC machining for connection points
+- Certified welding procedures for all joints
+- 100% dimensional inspection before shipping
 
-**Welding & Assembly**: CWB certified welders completed:
-- Full penetration welds on all structural connections
-- AWS D1.1 compliant procedures
-- 100% visual and 25% ultrasonic testing
+#### Logistics Excellence
+- Night delivery to avoid game day conflicts
+- Staged deliveries to minimize site storage
+- Pre-assembled sections where possible
+- On-site support during installation
 
-### Phase 3: Finishing & Delivery
+### Key Components Delivered
 
-To ensure longevity:
-- Blast cleaning to SSPC-SP 10 near-white metal
-- Zinc-rich primer application
-- Final powder coating in specified RAL colors
-- Just-in-time delivery to minimize site storage
+#### Main Support Beams
+- 45 custom W-shape beams, 40 feet average length
+- Grade 50 steel for enhanced strength
+- Pre-drilled connection points
+- Primer coating for field welding
 
-## Challenges & Solutions
+#### Connection Assemblies
+- 250 custom connector plates
+- Laser cut to ±1/32" tolerance
+- Galvanized for corrosion resistance
+- Complete with grade 8 hardware
 
-### Challenge 1: Tight Installation Windows
-**Solution**: We pre-assembled major components in our facility, reducing on-site installation time by 40%.
+#### Architectural Elements
+- 500 decorative brackets
+- Brushed stainless steel finish
+- CNC formed for consistent curves
+- Hidden fastener system
 
-### Challenge 2: Complex Geometries
-**Solution**: Our 3D modeling capabilities allowed us to verify fit before cutting, eliminating costly rework.
+### Quality Assurance
 
-### Challenge 3: Accelerated Schedule
-**Solution**: By running double shifts and optimizing our production flow, we delivered 2 weeks ahead of schedule.
+Every component underwent rigorous quality control:
+1. Material certification verification
+2. Dimensional inspection at multiple stages
+3. Weld testing per AWS D1.1 standards
+4. Surface preparation verification
+5. Final inspection before shipping
 
-## Project Results
+### Project Outcomes
 
-### Quality Metrics
-- **First-pass quality rate**: 99.8%
-- **Zero rejected components**
-- **All dimensional tolerances met**
+The renovation was completed successfully with our components installed without a single field modification required. The precision of our fabrication saved valuable installation time and reduced crane rental costs for the general contractor.
 
-### Schedule Performance
-- **Started**: May 15, 2023
-- **Completed**: August 15, 2023
-- **Delivered**: 2 weeks early
+### Sustainability Impact
 
-### Safety Record
-- **Zero injuries or incidents**
-- **Full compliance with site safety protocols**
-- **Recognition from EllisDon for safety excellence**
+- 95% of offcuts recycled
+- Local sourcing reduced transportation emissions
+- Optimized nesting saved 12% material
+- Powder coating eliminated VOC emissions
 
-## Technical Specifications
+### Recognition
 
-### Materials Used
-- **A36 Structural Steel**: 65 tons for main support structures
-- **Aluminum 6061-T6**: 15 tons for architectural elements
-- **Stainless Steel 316**: 5 tons for exposed public areas
+This project earned recognition from:
+- Canadian Institute of Steel Construction - Excellence Award
+- Ontario General Contractors Association - Subcontractor of the Year nomination
+- EllisDon Corporation - Preferred Vendor Status
 
-### Fabrication Techniques
-- **Laser cutting** up to 1" thickness
-- **CNC forming** up to 170 tons pressure
-- **MIG welding** for structural joints
-- **TIG welding** for aluminum and stainless components
+### Lessons Learned
 
-## Client Testimonial
+This project reinforced the importance of:
+- Early collaboration with all stakeholders
+- Investment in 3D modeling and scanning technology
+- Flexibility in scheduling and delivery
+- Maintaining open communication channels
 
-> "Canadian Metal Fabricators exceeded our expectations on every level. Their ability to maintain precision while accelerating the schedule was instrumental in keeping the overall project on track. The quality of their work is evident in every component they delivered."
->
-> **Michael Thompson**  
-> *Project Manager, EllisDon Corporation*
-
-## Environmental Considerations
-
-Our commitment to sustainability included:
-- Recycling 98% of metal waste
-- Optimizing material usage through advanced nesting
-- Using low-VOC coatings
-- Coordinating deliveries to reduce transportation emissions
-
-## Why This Project Matters
-
-The Rogers Centre renovation demonstrates our capability to:
-- Handle large-scale commercial projects
-- Meet stringent quality requirements
-- Deliver on accelerated timelines
-- Collaborate effectively with major contractors
-
-## Looking Forward
-
-This successful project has led to:
-- Ongoing partnership with EllisDon
-- Additional stadium and arena projects
-- Recognition as a preferred vendor for structural steel
-
-## Start Your Next Project
-
-Whether you're planning a major renovation or new construction, Canadian Metal Fabricators has the expertise, equipment, and track record to deliver exceptional results. Contact us to discuss how we can contribute to your project's success.
-
-**For similar projects, contact:**  
-Phone: (416) 555-0123  
-Email: commercial@canadianmetalfab.com
+The Rogers Centre renovation stands as a testament to Canadian Metal Fabricators' ability to handle complex, high-profile projects while maintaining the highest standards of quality and safety.
