@@ -1,4 +1,5 @@
 {
   "installCommand": "cd cmf-website-new && npm install",
-  "buildCommand": "cd cmf-website-new && npm run build"
+  "buildCommand": "cd cmf-website-new && npm run build",
+  "outputDirectory": "cmf-website-new/.vercel/output/static"
 }
