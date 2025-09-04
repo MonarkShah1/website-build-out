@@ -3,7 +3,7 @@
  * CRITICAL for SEO - Core Web Vitals are a ranking factor
  */
 
-import { onCLS, onFID, onFCP, onLCP, onTTFB, onINP } from 'web-vitals';
+import { onCLS, onFCP, onLCP, onTTFB, onINP } from 'web-vitals';
 
 interface Metric {
   name: string;
@@ -16,7 +16,6 @@ interface Metric {
 // Thresholds for Core Web Vitals
 const thresholds = {
   LCP: { good: 2500, poor: 4000 },      // Largest Contentful Paint
-  FID: { good: 100, poor: 300 },        // First Input Delay (deprecated, use INP)
   INP: { good: 200, poor: 500 },        // Interaction to Next Paint (replaces FID)
   CLS: { good: 0.1, poor: 0.25 },       // Cumulative Layout Shift
   FCP: { good: 1800, poor: 3000 },      // First Contentful Paint
@@ -84,13 +83,12 @@ function sendToAnalytics(metric: any) {
 export function initWebVitals() {
   // Core Web Vitals (these affect SEO rankings)
   onCLS(sendToAnalytics);
-  onINP(sendToAnalytics);  // INP replaces FID as of March 2024
+  onINP(sendToAnalytics);  // INP is the new metric that replaced FID in March 2024
   onLCP(sendToAnalytics);
   
   // Other metrics
   onFCP(sendToAnalytics);
   onTTFB(sendToAnalytics);
-  onFID(sendToAnalytics);  // Keep FID for backwards compatibility
   
   // Custom performance tracking
   if (typeof window !== 'undefined') {
