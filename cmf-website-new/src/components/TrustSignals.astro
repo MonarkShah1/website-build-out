@@ -1,0 +1,59 @@
+---
+const trustItems = [
+  { label: 'ISO 9001 Certified', icon: '✓' },
+  { label: '40+ Years Experience', icon: '★' },
+  { label: '10,000+ Projects', icon: '📊' },
+  { label: '24/7 Support', icon: '🕐' },
+];
+---
+
+<section class="trust-signals">
+  <div class="container">
+    <div class="trust-grid">
+      {trustItems.map(item => (
+        <div class="trust-item">
+          <span class="trust-icon">{item.icon}</span>
+          <span class="trust-label">{item.label}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .trust-signals {
+    padding: 2rem 0;
+    background: var(--color-gray-50);
+    border-top: 1px solid var(--color-gray-200);
+    border-bottom: 1px solid var(--color-gray-200);
+  }
+  
+  .trust-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+  }
+  
+  .trust-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  
+  .trust-icon {
+    font-size: 1.5rem;
+  }
+  
+  .trust-label {
+    font-weight: 600;
+    color: var(--color-gray-700);
+  }
+  
+  @media (max-width: 640px) {
+    .trust-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+  }
+</style>

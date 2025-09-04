@@ -1,0 +1,62 @@
+---
+interface Props {
+  currentService: string;
+  limit?: number;
+}
+
+const { currentService, limit = 3 } = Astro.props;
+
+// Mock related services - in production, fetch from content collection
+const relatedServices = [
+  { title: 'Laser Cutting', slug: 'laser-cutting', description: 'Precision cutting services' },
+  { title: 'Welding', slug: 'welding', description: 'Professional welding services' },
+  { title: 'Metal Fabrication', slug: 'metal-fabrication', description: 'Custom fabrication solutions' },
+].filter(s => s.slug !== currentService).slice(0, limit);
+---
+
+<section class="related-services">
+  <div class="container">
+    <h2>Related Services</h2>
+    <div class="services-grid">
+      {relatedServices.map(service => (
+        <article class="service-card">
+          <h3>{service.title}</h3>
+          <p>{service.description}</p>
+          <a href={`/services/${service.slug}/`} class="btn btn-outline btn-sm">
+            Learn More →
+          </a>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .related-services {
+    padding: 4rem 0;
+    background: var(--color-gray-50);
+  }
+  
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  
+  .service-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  .service-card h3 {
+    margin-bottom: 1rem;
+  }
+  
+  .service-card p {
+    margin-bottom: 1.5rem;
+    color: var(--color-gray-600);
+  }
+</style>
