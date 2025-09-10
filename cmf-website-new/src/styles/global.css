@@ -4,6 +4,63 @@
  * Component-specific styles should be in component files
  */
 
+/* Font Loading - Self-Hosted for Performance */
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter-medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/fonts/montserrat-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/fonts/montserrat-semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Playfair Display';
+  src: url('/fonts/playfair-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Playfair Display';
+  src: url('/fonts/playfair-black.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   /* CMF Color Palette - Industrial + Canadian Aesthetics */
   
@@ -50,30 +107,44 @@
   --error: #EF4444;
   --info: #3B82F6;
   
-  /* Typography Scale (Mobile First) */
-  --text-xs: 0.75rem;    /* 12px */
-  --text-sm: 0.875rem;   /* 14px */
-  --text-base: 1rem;     /* 16px */
-  --text-lg: 1.125rem;   /* 18px */
-  --text-xl: 1.25rem;    /* 20px */
-  --text-2xl: 1.5rem;    /* 24px */
-  --text-3xl: 1.875rem;  /* 30px */
-  --text-4xl: 2.25rem;   /* 36px */
-  --text-5xl: 3rem;      /* 48px */
+  /* Typography - CMF Professional System */
   
-  /* Line Heights */
-  --leading-tight: 1.25;
-  --leading-snug: 1.375;
-  --leading-normal: 1.5;
-  --leading-relaxed: 1.625;
-  --leading-loose: 2;
+  /* Font Families */
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-ui: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
   
-  /* Letter Spacing */
-  --tracking-tighter: -0.05em;
-  --tracking-tight: -0.025em;
-  --tracking-normal: 0;
-  --tracking-wide: 0.025em;
-  --tracking-wider: 0.05em;
+  /* Typography Scale (WCAG Compliant) */
+  --text-xs: 0.75rem;     /* 12px - Caption minimum */
+  --text-sm: 0.875rem;    /* 14px - Small body text */
+  --text-base: 1rem;      /* 16px - Primary body text */
+  --text-lg: 1.125rem;    /* 18px - Large body text */
+  --text-xl: 1.25rem;     /* 20px - H4 */
+  --text-2xl: 1.5rem;     /* 24px - H3 */
+  --text-3xl: 2rem;       /* 32px - H2 */
+  --text-4xl: 2.5rem;     /* 40px - H1 Section */
+  --text-5xl: 3rem;       /* 48px - H1 Hero */
+  
+  /* Font Weights */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --weight-black: 900;
+  
+  /* Line Heights (WCAG ≥1.5) */
+  --leading-tight: 1.2;      /* Display headings only */
+  --leading-snug: 1.3;       /* H2 headings */
+  --leading-normal: 1.5;     /* Body text minimum */
+  --leading-relaxed: 1.6;    /* Primary body text */
+  --leading-loose: 1.7;      /* Mobile body text */
+  
+  /* Letter Spacing (Organic Feel) */
+  --tracking-tighter: -0.025em;   /* Large display text */
+  --tracking-tight: -0.01em;      /* Headings */
+  --tracking-normal: 0;            /* Body text */
+  --tracking-wide: 0.02em;         /* UI elements */
+  --tracking-wider: 0.05em;        /* Buttons/CTAs */
   
   /* Spacing Scale (8px base) */
   --space-0: 0;
@@ -164,38 +235,56 @@ html {
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-body);
   font-size: var(--text-base);
-  line-height: var(--leading-normal);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-relaxed);
+  letter-spacing: var(--tracking-normal);
   color: var(--cmf-text-dark);
   background-color: var(--cmf-off-white);
   min-height: 100vh;
 }
 
-/* Headings - SEO optimized hierarchy */
-h1, h2, h3, h4, h5, h6 {
-  font-weight: 700;
+/* Headings - CMF Typography Hierarchy */
+h1, h2 {
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
   line-height: var(--leading-tight);
-  letter-spacing: var(--tracking-tight);
+  letter-spacing: var(--tracking-tighter);
+  color: var(--cmf-primary);
 }
 
+h3, h4, h5, h6 {
+  font-family: var(--font-body);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-tight);
+  color: var(--cmf-text-dark);
+}
+
+/* Hero Heading */
 h1 {
-  font-size: clamp(var(--text-3xl), 4vw, var(--text-5xl));
+  font-size: clamp(var(--text-4xl), 4vw, var(--text-5xl));
+  font-weight: var(--weight-bold);
+  margin-bottom: var(--space-6);
+}
+
+/* Section Headings */
+h2 {
+  font-size: clamp(var(--text-3xl), 3.5vw, var(--text-4xl));
+  font-weight: var(--weight-bold);
   margin-bottom: var(--space-4);
 }
 
-h2 {
-  font-size: clamp(var(--text-2xl), 3.5vw, var(--text-4xl));
-  margin-bottom: var(--space-3);
-}
-
+/* Card/Article Headings */
 h3 {
-  font-size: clamp(var(--text-xl), 3vw, var(--text-3xl));
+  font-size: clamp(var(--text-xl), 3vw, var(--text-2xl));
   margin-bottom: var(--space-3);
 }
 
+/* Component Headings */
 h4 {
-  font-size: clamp(var(--text-lg), 2.5vw, var(--text-2xl));
+  font-size: clamp(var(--text-lg), 2.5vw, var(--text-xl));
   margin-bottom: var(--space-2);
 }
 
@@ -306,6 +395,66 @@ button {
 .focus-visible:focus-visible {
   outline: 2px solid var(--cmf-primary);
   outline-offset: 2px;
+}
+
+/* Responsive Typography - Mobile Optimization */
+@media (max-width: 768px) {
+  body {
+    font-size: var(--text-base); /* Maintain 16px minimum */
+    line-height: var(--leading-loose); /* Increase to 1.7 for mobile readability */
+  }
+  
+  h1 {
+    font-size: clamp(var(--text-3xl), 5vw, var(--text-4xl));
+    line-height: 1.1; /* Tighter for mobile screens */
+    margin-bottom: var(--space-4);
+  }
+  
+  h2 {
+    font-size: clamp(var(--text-2xl), 4vw, var(--text-3xl));
+    line-height: var(--leading-snug);
+    margin-bottom: var(--space-3);
+  }
+  
+  h3 {
+    font-size: clamp(var(--text-lg), 3vw, var(--text-xl));
+    margin-bottom: var(--space-3);
+  }
+  
+  /* Increase paragraph spacing for thumb scrolling */
+  p {
+    margin-bottom: 1.5rem; /* 24px for easier mobile reading */
+  }
+  
+  /* UI elements maintain touch-friendly sizes */
+  button, .btn {
+    font-size: var(--text-base); /* 16px minimum for iOS zoom prevention */
+    font-family: var(--font-ui);
+    font-weight: var(--weight-semibold);
+    min-height: 44px; /* iOS touch target minimum */
+  }
+  
+  /* Navigation and small UI text */
+  nav, .nav-link {
+    font-size: 15px; /* Slightly smaller but still legible */
+    font-family: var(--font-ui);
+  }
+}
+
+@media (max-width: 480px) {
+  /* Extra small screens - maintain readability */
+  h1 {
+    font-size: clamp(1.75rem, 6vw, var(--text-3xl));
+  }
+  
+  h2 {
+    font-size: clamp(1.5rem, 5vw, var(--text-2xl));
+  }
+  
+  /* Increase letter spacing slightly for small screens */
+  body {
+    letter-spacing: 0.01em;
+  }
 }
 
 /* Reduced motion preferences */

@@ -589,11 +589,14 @@ const criticalResources = [
   }
   
   .hero .lead {
-    font-size: clamp(1.125rem, 2vw, 1.25rem);
+    font-family: var(--font-body);
+    font-size: clamp(var(--text-lg), 2vw, var(--text-xl));
+    font-weight: var(--weight-regular);
     color: rgba(245, 245, 245, 0.9);
     max-width: 600px;
     margin: 0 0 var(--space-8);
-    line-height: 1.6;
+    line-height: var(--leading-relaxed);
+    letter-spacing: var(--tracking-normal);
   }
   
   .backup-cta {
@@ -878,14 +881,26 @@ const criticalResources = [
   /* Portfolio Section */
   .portfolio {
     padding: var(--space-20) 0;
-    background: var(--gray-50);
+    background: linear-gradient(135deg, var(--cmf-off-white) 0%, #ffffff 100%);
     position: relative;
+  }
+  
+  .portfolio::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 150px;
+    background: var(--canadian-accent);
+    opacity: 0.05;
   }
   
   .section-description {
     text-align: center;
     font-size: var(--text-lg);
-    color: var(--gray-600);
+    color: var(--cmf-text-dark);
+    opacity: 0.8;
     max-width: 600px;
     margin: 0 auto var(--space-12);
     line-height: 1.6;
@@ -901,9 +916,9 @@ const criticalResources = [
   
   .filter-btn {
     padding: var(--space-3) var(--space-6);
-    border: 2px solid var(--gray-300);
-    background: var(--white);
-    color: var(--gray-700);
+    border: 2px solid var(--cmf-metallic);
+    background: var(--cmf-off-white);
+    color: var(--cmf-text-dark);
     border-radius: var(--radius-full);
     font-weight: 600;
     cursor: pointer;
@@ -912,9 +927,9 @@ const criticalResources = [
   
   .filter-btn:hover,
   .filter-btn.active {
-    background: var(--cmf-accent);
-    color: var(--white);
-    border-color: var(--cmf-accent);
+    background: var(--cmf-orange);
+    color: var(--cmf-off-white);
+    border-color: var(--cmf-orange);
     transform: translateY(-2px);
   }
   
@@ -1020,7 +1035,7 @@ const criticalResources = [
   .value-story:hover {
     transform: translateY(-6px);
     box-shadow: var(--shadow-xl);
-    border-color: var(--cmf-blue);
+    border-color: var(--cmf-primary);
   }
   
   .value-icon {
@@ -1043,10 +1058,10 @@ const criticalResources = [
   }
   
   .value-story blockquote {
-    background: var(--cmf-accent-light);
+    background: var(--cmf-red-light);
     padding: var(--space-4);
     border-radius: var(--radius-lg);
-    border-left: 4px solid var(--cmf-accent);
+    border-left: 4px solid var(--cmf-red);
     margin: 0;
     text-align: left;
   }
@@ -1168,20 +1183,36 @@ const criticalResources = [
   
   .cta-section {
     padding: var(--space-20) 0;
-    background: linear-gradient(135deg, var(--cmf-blue) 0%, #003d99 100%);
-    color: var(--white);
+    background: var(--hero-gradient);
+    color: var(--cmf-off-white);
     text-align: center;
+    position: relative;
+  }
+  
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--canadian-accent);
+    opacity: 0.03;
   }
   
   .cta-section h2 {
-    color: var(--white);
+    color: var(--cmf-off-white);
     margin-bottom: var(--space-4);
+    position: relative;
+    z-index: 1;
   }
   
   .cta-description {
     font-size: var(--text-xl);
     margin-bottom: var(--space-8);
     opacity: 0.95;
+    position: relative;
+    z-index: 1;
   }
   
   .cta-buttons {
@@ -1189,6 +1220,8 @@ const criticalResources = [
     gap: var(--space-4);
     justify-content: center;
     flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
   }
   
   /* Responsive Design - Mobile First */
