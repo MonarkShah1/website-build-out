@@ -5,10 +5,21 @@
  */
 
 :root {
-  /* Primary Colors */
+  /* Primary Colors - Enhanced for Canadian Metal Fabrication Brand */
   --cmf-blue: #3A5D9A;
   --cmf-blue-hover: #2C4A7C;
   --cmf-blue-active: #1E3558;
+  
+  /* Canadian Accent Colors */
+  --cmf-accent: #C41E3A; /* Canadian Red for CTAs and highlights */
+  --cmf-accent-hover: #A51729;
+  --cmf-accent-light: rgba(196, 30, 58, 0.1);
+  
+  /* Metal Texture Colors */
+  --metal-silver: #BDC3C7;
+  --metal-dark: #34495E;
+  --metal-light: #ECF0F1;
+  --steel-blue: #4A6741;
   
   /* Neutral Colors */
   --white: #FFFFFF;
@@ -100,6 +111,18 @@
   --transition-fast: 150ms ease;
   --transition-base: 250ms ease;
   --transition-slow: 350ms ease;
+  
+  /* Brand-specific spacing for asymmetrical design */
+  --offset-small: 5px;
+  --offset-medium: 10px;
+  --offset-large: 20px;
+  
+  /* Metal texture gradients */
+  --metal-texture: linear-gradient(135deg, #BDC3C7 0%, #ECF0F1 50%, #BDC3C7 100%);
+  --brushed-metal: linear-gradient(45deg, #BDC3C7 25%, transparent 25%), 
+                   linear-gradient(-45deg, #BDC3C7 25%, transparent 25%), 
+                   linear-gradient(45deg, transparent 75%, #BDC3C7 75%), 
+                   linear-gradient(-45deg, transparent 75%, #BDC3C7 75%);
   
   /* Container */
   --container-sm: 640px;
