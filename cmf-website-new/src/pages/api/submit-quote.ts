@@ -31,6 +31,10 @@ export const OPTIONS: APIRoute = async () => {
 // Handle quote form submission
 export const POST: APIRoute = async ({ request }) => {
   try {
+    console.log('=== Quote Submission Started ===');
+    console.log('Request URL:', request.url);
+    console.log('Content-Type:', request.headers.get('content-type'));
+    
     // Parse request body
     const contentType = request.headers.get('content-type');
     let formData;
@@ -79,6 +83,9 @@ export const POST: APIRoute = async ({ request }) => {
     }
     
     // Validate form data
+    console.log('Starting validation of form data...');
+    console.log('Form data keys:', Object.keys(formData));
+    
     const validationResult = quoteFormSchema.safeParse(formData);
     
     if (!validationResult.success) {
@@ -94,6 +101,8 @@ export const POST: APIRoute = async ({ request }) => {
       
       return createErrorResponse('Validation failed', 400, errors);
     }
+    
+    console.log('Validation successful, proceeding with quote processing...');
     
     // Generate quote ID
     const quoteId = generateQuoteId();
@@ -187,6 +196,22 @@ export const POST: APIRoute = async ({ request }) => {
     
   } catch (error) {
     console.error('Quote submission error:', error);
+    console.error('Error stack:', error instanceof Error ? error.stack : 'Unknown error');
+    console.error('Error message:', error instanceof Error ? error.message : 'Unknown error message');
+    
+    // In development, return detailed error info
+    const isDev = (process.env.NODE_ENV === 'development' || process.env.PUBLIC_ENV === 'development');
+    
+    if (isDev) {
+      return createErrorResponse(
+        `Detailed error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        500,
+        { 
+          stack: error instanceof Error ? error.stack : 'No stack trace',
+          type: error instanceof Error ? error.constructor.name : 'Unknown error type'
+        }
+      );
+    }
     
     return createErrorResponse(
       'An error occurred while processing your request. Please try again.',
