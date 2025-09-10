@@ -82,11 +82,37 @@ export const POST: APIRoute = async ({ request }) => {
       }));
     }
     
+    // Check if this is from hero form and needs special handling
+    const isHeroForm = formData.metadata?.source === 'hero-form';
+    console.log('Is hero form submission:', isHeroForm);
+    
     // Validate form data
     console.log('Starting validation of form data...');
     console.log('Form data keys:', Object.keys(formData));
     
-    const validationResult = quoteFormSchema.safeParse(formData);
+    let validationResult;
+    if (isHeroForm) {
+      // For hero form, ensure all required fields have defaults
+      const enrichedFormData = {
+        ...formData,
+        contact: {
+          ...formData.contact,
+          jobTitle: formData.contact.jobTitle || '',
+        },
+        project: {
+          ...formData.project,
+          thickness: formData.project.thickness || '1/4"',
+          budget: formData.project.budget || 'under-5000',
+        }
+      };
+      console.log('Enriched hero form data with defaults');
+      validationResult = quoteFormSchema.safeParse(enrichedFormData);
+      if (validationResult.success) {
+        formData = enrichedFormData;
+      }
+    } else {
+      validationResult = quoteFormSchema.safeParse(formData);
+    }
     
     if (!validationResult.success) {
       const errors: Record<string, string> = {};

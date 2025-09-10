@@ -5,21 +5,31 @@
  */
 
 :root {
-  /* Primary Colors - Enhanced for Canadian Metal Fabrication Brand */
-  --cmf-blue: #3A5D9A;
-  --cmf-blue-hover: #2C4A7C;
-  --cmf-blue-active: #1E3558;
+  /* CMF Color Palette - Industrial + Canadian Aesthetics */
   
-  /* Canadian Accent Colors */
-  --cmf-accent: #C41E3A; /* Canadian Red for CTAs and highlights */
-  --cmf-accent-hover: #A51729;
-  --cmf-accent-light: rgba(196, 30, 58, 0.1);
+  /* Primary Blue - Trust & Precision */
+  --cmf-primary: #003366; /* Deep navy for reliability */
+  --cmf-primary-hover: #002952;
+  --cmf-primary-active: #001f3d;
   
-  /* Metal Texture Colors */
-  --metal-silver: #BDC3C7;
-  --metal-dark: #34495E;
-  --metal-light: #ECF0F1;
-  --steel-blue: #4A6741;
+  /* Metallic Gray - Industrial Theme */
+  --cmf-metallic: #A9A9A9; /* True metallic without coldness */
+  --cmf-metallic-dark: #969696;
+  --cmf-metallic-light: #BFBFBF;
+  
+  /* Energy Orange - CTAs & Warmth */
+  --cmf-orange: #FF4500; /* Energy and approachability */
+  --cmf-orange-hover: #E63E00;
+  --cmf-orange-light: rgba(255, 69, 0, 0.1);
+  
+  /* Canadian Red - Patriotic Accents */
+  --cmf-red: #D80606; /* Flag-inspired warmth */
+  --cmf-red-hover: #C40505;
+  --cmf-red-light: rgba(216, 6, 6, 0.1);
+  
+  /* Clean Neutrals */
+  --cmf-off-white: #F5F5F5; /* Cleaner than pure white */
+  --cmf-text-dark: #333333; /* Warmer than black */
   
   /* Neutral Colors */
   --white: #FFFFFF;
