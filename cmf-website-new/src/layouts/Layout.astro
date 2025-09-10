@@ -169,6 +169,21 @@ if (!description) {
       });
     </script>
     
+    <!-- Performance Testing (Development Only) -->
+    <script>
+      // Load performance testing in development
+      if (window.location.hostname === 'localhost') {
+        import('../scripts/performance-test.js').catch(error => {
+          console.warn('⚠️ Performance testing failed to load:', error);
+        });
+        
+        // Load accessibility testing
+        import('../scripts/accessibility-test.js').catch(error => {
+          console.warn('⚠️ Accessibility testing failed to load:', error);
+        });
+      }
+    </script>
+    
     <!-- Web Vitals monitoring -->
     <script>
       // Only load on production

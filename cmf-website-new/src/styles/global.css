@@ -403,63 +403,186 @@ button {
   outline-offset: 2px;
 }
 
-/* Responsive Typography - Mobile Optimization */
-@media (max-width: 768px) {
+/* Mobile-First Responsive Typography - WCAG 2.2 Compliant */
+
+/* Base Mobile Styles (320px+) - Mobile First Approach */
+body {
+  font-size: var(--text-base); /* 16px minimum for iOS zoom prevention */
+  line-height: var(--leading-loose); /* 1.7 for mobile readability */
+  touch-action: manipulation; /* Disable double-tap zoom */
+}
+
+h1 {
+  font-size: clamp(1.75rem, 6vw, var(--text-3xl));
+  line-height: 1.1; /* Tighter for mobile screens */
+  margin-bottom: var(--space-4);
+}
+
+h2 {
+  font-size: clamp(1.5rem, 5vw, var(--text-2xl));
+  line-height: var(--leading-snug);
+  margin-bottom: var(--space-3);
+}
+
+h3 {
+  font-size: clamp(var(--text-lg), 4vw, var(--text-xl));
+  margin-bottom: var(--space-3);
+}
+
+/* Mobile paragraph spacing for thumb scrolling */
+p {
+  margin-bottom: 1.5rem; /* 24px for easier mobile reading */
+}
+
+/* WCAG 2.5.5 Touch Targets - Minimum 44x44px */
+button, 
+.btn,
+.cta-button,
+.submit-btn,
+.filter-btn,
+input[type="submit"],
+input[type="button"],
+input[type="reset"],
+a.button {
+  font-size: var(--text-base); /* 16px minimum for iOS zoom prevention */
+  font-family: var(--font-ui);
+  font-weight: var(--weight-semibold);
+  min-height: 44px; /* WCAG 2.5.5 minimum */
+  min-width: 44px; /* WCAG 2.5.5 minimum */
+  padding: 0.75rem 1rem; /* Ensure adequate padding */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Navigation links touch targets */
+nav a,
+.nav-link,
+.capability-link,
+.member-linkedin {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem;
+  font-size: 15px; /* Slightly smaller but still legible */
+  font-family: var(--font-ui);
+}
+
+/* Form inputs touch-friendly sizing */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="url"],
+input[type="search"],
+textarea,
+select {
+  min-height: 48px; /* Larger for form inputs */
+  padding: 0.75rem;
+  font-size: var(--text-base); /* Prevent zoom on iOS */
+}
+
+/* Tablet Portrait (768px+) */
+@media (min-width: 768px) {
   body {
-    font-size: var(--text-base); /* Maintain 16px minimum */
-    line-height: var(--leading-loose); /* Increase to 1.7 for mobile readability */
+    line-height: var(--leading-relaxed); /* Reduce to 1.6 on larger screens */
   }
   
   h1 {
-    font-size: clamp(var(--text-3xl), 5vw, var(--text-4xl));
-    line-height: 1.1; /* Tighter for mobile screens */
+    font-size: clamp(var(--text-3xl), 4vw, var(--text-4xl));
+    line-height: 1.2;
+    margin-bottom: var(--space-6);
+  }
+  
+  h2 {
+    font-size: clamp(var(--text-2xl), 3.5vw, var(--text-3xl));
     margin-bottom: var(--space-4);
   }
   
-  h2 {
-    font-size: clamp(var(--text-2xl), 4vw, var(--text-3xl));
-    line-height: var(--leading-snug);
-    margin-bottom: var(--space-3);
-  }
-  
   h3 {
-    font-size: clamp(var(--text-lg), 3vw, var(--text-xl));
-    margin-bottom: var(--space-3);
+    font-size: clamp(var(--text-xl), 3vw, var(--text-2xl));
   }
   
-  /* Increase paragraph spacing for thumb scrolling */
-  p {
-    margin-bottom: 1.5rem; /* 24px for easier mobile reading */
-  }
-  
-  /* UI elements maintain touch-friendly sizes */
+  /* Reduce touch targets slightly for precision devices */
   button, .btn {
-    font-size: var(--text-base); /* 16px minimum for iOS zoom prevention */
-    font-family: var(--font-ui);
-    font-weight: var(--weight-semibold);
-    min-height: 44px; /* iOS touch target minimum */
-  }
-  
-  /* Navigation and small UI text */
-  nav, .nav-link {
-    font-size: 15px; /* Slightly smaller but still legible */
-    font-family: var(--font-ui);
+    min-height: 40px;
+    min-width: auto;
+    padding: 0.5rem 1rem;
   }
 }
 
-@media (max-width: 480px) {
-  /* Extra small screens - maintain readability */
+/* Desktop (1024px+) */
+@media (min-width: 1024px) {
   h1 {
-    font-size: clamp(1.75rem, 6vw, var(--text-3xl));
+    font-size: clamp(var(--text-4xl), 4vw, var(--text-5xl));
   }
   
   h2 {
-    font-size: clamp(1.5rem, 5vw, var(--text-2xl));
+    font-size: clamp(var(--text-3xl), 3.5vw, var(--text-4xl));
   }
   
-  /* Increase letter spacing slightly for small screens */
+  /* Desktop hover states */
+  button:hover,
+  .btn:hover,
+  .cta-button:hover {
+    transform: translateY(-1px);
+  }
+}
+
+/* Large Desktop (1280px+) - Maintain readability */
+@media (min-width: 1280px) {
   body {
-    letter-spacing: 0.01em;
+    font-size: 1.125rem; /* 18px for comfortable reading */
+  }
+}
+
+/* WCAG 2.4.7 Visible Focus Indicators - Enhanced */
+:focus-visible {
+  outline: 3px solid var(--cmf-orange);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Form focus states with orange theme */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--cmf-orange);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px rgba(255, 69, 0, 0.2);
+}
+
+/* Button focus states */
+button:focus-visible,
+.btn:focus-visible,
+.cta-button:focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--cmf-orange);
+  outline-offset: 2px;
+  box-shadow: 0 0 8px rgba(255, 69, 0, 0.3);
+}
+
+/* Navigation focus states */
+nav a:focus-visible,
+.nav-link:focus-visible {
+  outline: 3px solid var(--cmf-orange);
+  outline-offset: 2px;
+  background-color: rgba(255, 69, 0, 0.1);
+}
+
+/* Skip to content link - WCAG 2.4.1 Bypass Blocks */
+.skip-link:focus-visible {
+  top: 0;
+  z-index: 1000;
+  outline: 3px solid var(--white);
+  outline-offset: 2px;
+}
+
+/* Focus management for reduced motion users */
+@media (prefers-reduced-motion: reduce) {
+  :focus-visible {
+    transition: none;
   }
 }
 

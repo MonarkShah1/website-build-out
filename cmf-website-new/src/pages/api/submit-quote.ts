@@ -153,7 +153,8 @@ export const POST: APIRoute = async ({ request }) => {
     // Save files locally if provided
     const savedFiles: { name: string; path: string; size: number }[] = [];
     if (files.length > 0) {
-      const uploadsDir = path.resolve(process.cwd(), 'uploads', quoteId);
+      // Use /tmp directory for serverless environments (Vercel)
+      const uploadsDir = path.join('/tmp', 'uploads', quoteId);
       
       // Create directory for this quote
       if (!existsSync(uploadsDir)) {

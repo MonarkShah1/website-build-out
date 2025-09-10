@@ -361,13 +361,19 @@ const HeroQuoteForm: React.FC<HeroQuoteFormProps> = ({ onSubmit, className = '' 
         <p>Paste your project details or RFQ email below</p>
       </div>
       
-      <form onSubmit={(e) => {
-        console.log('📄 Form onSubmit triggered!');
-        return handleSubmit((data) => {
-          console.log('📨 handleSubmit callback called with data:', data);
-          return handleFormSubmit(data);
-        })(e);
-      }} className="hero-form">
+      <form 
+        onSubmit={(e) => {
+          console.log('📄 Form onSubmit triggered!');
+          return handleSubmit((data) => {
+            console.log('📨 handleSubmit callback called with data:', data);
+            return handleFormSubmit(data);
+          })(e);
+        }} 
+        className="hero-form"
+        role="form"
+        aria-label="Request quote form"
+        noValidate
+      >
         {/* Primary paste area */}
         <div className="form-group paste-group">
           <label htmlFor="projectDetails" className="sr-only">
@@ -384,6 +390,9 @@ const HeroQuoteForm: React.FC<HeroQuoteFormProps> = ({ onSubmit, className = '' 
               className={`paste-textarea ${errors.projectDetails ? 'error' : ''}`}
               placeholder="Paste your project details or RFQ email here... Or describe what you need fabricated."
               rows={8}
+              aria-describedby={errors.projectDetails ? 'projectDetails-error' : 'projectDetails-hint'}
+              aria-invalid={errors.projectDetails ? 'true' : 'false'}
+              aria-required="true"
             />
             <div className="paste-toolbar">
               {isClipboardSupported() && (
@@ -401,13 +410,26 @@ const HeroQuoteForm: React.FC<HeroQuoteFormProps> = ({ onSubmit, className = '' 
               </div>
             </div>
           </div>
+          <div id="projectDetails-hint" className="sr-only">
+            Describe your metal fabrication project. Include materials, dimensions, and timeline if known.
+          </div>
           {errors.projectDetails && (
-            <span className="error-message">{errors.projectDetails.message}</span>
+            <span 
+              id="projectDetails-error" 
+              className="error-message" 
+              role="alert"
+              aria-live="polite"
+            >
+              {errors.projectDetails.message}
+            </span>
           )}
         </div>
 
         {/* File upload area */}
         <div className="form-group file-upload-group">
+          <label className="sr-only" htmlFor="file-upload">
+            Upload project files (CAD drawings, images, PDFs)
+          </label>
           <div
             {...getRootProps()}
             className={`file-dropzone ${
@@ -415,8 +437,16 @@ const HeroQuoteForm: React.FC<HeroQuoteFormProps> = ({ onSubmit, className = '' 
             } ${
               uploadedFiles.length > 0 ? 'has-files' : ''
             }`}
+            role="button"
+            aria-describedby="file-upload-instructions"
+            aria-label="File upload area. Click to select files or drag files here."
+            tabIndex={0}
           >
-            <input {...getInputProps()} />
+            <input 
+              {...getInputProps()} 
+              id="file-upload"
+              aria-describedby="file-upload-instructions"
+            />
             <div className="dropzone-content">
               {isDragActive ? (
                 <>
@@ -425,9 +455,11 @@ const HeroQuoteForm: React.FC<HeroQuoteFormProps> = ({ onSubmit, className = '' 
                 </>
               ) : (
                 <>
-                  <div className="upload-icon">📎</div>
+                  <div className="upload-icon" aria-hidden="true">📎</div>
                   <p><strong>Click to upload</strong> or drag files here</p>
-                  <p className="upload-hint">CAD files, drawings, images, PDFs (Max 10MB each)</p>
+                  <p className="upload-hint" id="file-upload-instructions">
+                    CAD files, drawings, images, PDFs (Max 10MB each). Supported formats: JPG, PNG, PDF, DWG
+                  </p>
                 </>
               )}
             </div>
@@ -460,47 +492,75 @@ const HeroQuoteForm: React.FC<HeroQuoteFormProps> = ({ onSubmit, className = '' 
         </div>
 
         {/* Contact fields */}
-        <div className="form-row">
+        <fieldset className="form-row" role="group" aria-labelledby="contact-legend">
+          <legend id="contact-legend" className="sr-only">Contact Information</legend>
           <div className="form-group">
+            <label htmlFor="contactName" className="sr-only">Full Name (Required)</label>
             <input
               {...register('contactName')}
+              id="contactName"
               type="text"
               placeholder="Your Name *"
               className={errors.contactName ? 'error' : ''}
+              aria-invalid={errors.contactName ? 'true' : 'false'}
+              aria-required="true"
+              aria-describedby={errors.contactName ? 'contactName-error' : undefined}
+              autoComplete="name"
             />
             {errors.contactName && (
-              <span className="error-message">{errors.contactName.message}</span>
+              <span id="contactName-error" className="error-message" role="alert" aria-live="polite">
+                {errors.contactName.message}
+              </span>
             )}
           </div>
           <div className="form-group">
+            <label htmlFor="email" className="sr-only">Email Address (Required)</label>
             <input
               {...register('email')}
+              id="email"
               type="email"
               placeholder="Email Address *"
               className={errors.email ? 'error' : ''}
+              aria-invalid={errors.email ? 'true' : 'false'}
+              aria-required="true"
+              aria-describedby={errors.email ? 'email-error' : undefined}
+              autoComplete="email"
             />
             {errors.email && (
-              <span className="error-message">{errors.email.message}</span>
+              <span id="email-error" className="error-message" role="alert" aria-live="polite">
+                {errors.email.message}
+              </span>
             )}
           </div>
-        </div>
+        </fieldset>
 
-        <div className="form-row">
+        <fieldset className="form-row" role="group" aria-labelledby="optional-legend">
+          <legend id="optional-legend" className="sr-only">Optional Contact Information</legend>
           <div className="form-group">
+            <label htmlFor="phone" className="sr-only">Phone Number (Optional)</label>
             <input
               {...register('phone')}
+              id="phone"
               type="tel"
               placeholder="Phone Number (Optional)"
+              autoComplete="tel"
+              aria-describedby="phone-hint"
             />
+            <div id="phone-hint" className="sr-only">
+              Include area code for fastest response
+            </div>
           </div>
           <div className="form-group">
+            <label htmlFor="company" className="sr-only">Company Name (Optional)</label>
             <input
               {...register('company')}
+              id="company"
               type="text"
               placeholder="Company (Optional)"
+              autoComplete="organization"
             />
           </div>
-        </div>
+        </fieldset>
 
         {/* Submit button */}
         <button
@@ -555,7 +615,12 @@ const HeroQuoteForm: React.FC<HeroQuoteFormProps> = ({ onSubmit, className = '' 
         </button>
 
         {submitStatus === 'error' && (
-          <div className="error-message">
+          <div 
+            className="error-message" 
+            role="alert" 
+            aria-live="assertive"
+            id="form-error"
+          >
             {submitMessage || 'Something went wrong. Please try again or call us at (416) 555-0123.'}
           </div>
         )}
