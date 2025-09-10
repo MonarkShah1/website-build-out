@@ -533,9 +533,10 @@ const criticalResources = [
   /* Hero Section - Enhanced with Canadian Branding */
   .hero {
     padding: var(--space-20) 0;
-    background: linear-gradient(135deg, var(--metal-light) 0%, var(--white) 100%);
+    background: var(--hero-gradient);
     position: relative;
     overflow: hidden;
+    color: var(--cmf-off-white);
   }
   
   .hero::before {
@@ -583,15 +584,13 @@ const criticalResources = [
     font-size: clamp(2rem, 4vw, 3rem);
     line-height: 1.2;
     margin-bottom: var(--space-6);
-    background: linear-gradient(135deg, var(--gray-900) 0%, var(--cmf-blue) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--cmf-off-white);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   }
   
   .hero .lead {
     font-size: clamp(1.125rem, 2vw, 1.25rem);
-    color: var(--gray-600);
+    color: rgba(245, 245, 245, 0.9);
     max-width: 600px;
     margin: 0 0 var(--space-8);
     line-height: 1.6;
@@ -616,28 +615,29 @@ const criticalResources = [
   }
   
   .cta-button.primary {
-    background: var(--cmf-accent);
-    color: var(--white);
-    border: 2px solid var(--cmf-accent);
-    box-shadow: 0 0 0 0 var(--cmf-accent-light);
+    background: var(--cmf-orange);
+    color: var(--cmf-off-white);
+    border: 2px solid var(--cmf-orange);
+    box-shadow: 0 0 0 0 var(--cmf-orange-light);
     transition: all var(--transition-base), box-shadow 0.3s ease;
   }
   
   .cta-button.primary:hover {
-    background: var(--cmf-accent-hover);
-    border-color: var(--cmf-accent-hover);
+    background: var(--cmf-orange-hover);
+    border-color: var(--cmf-orange-hover);
     transform: translateY(-2px) scale(1.05);
-    box-shadow: 0 0 20px 5px var(--cmf-accent-light);
+    box-shadow: 0 0 20px 5px var(--cmf-orange-light);
   }
   
   .cta-button.secondary {
-    background: var(--white);
-    color: var(--cmf-blue);
-    border: 2px solid var(--cmf-blue);
+    background: var(--cmf-off-white);
+    color: var(--cmf-primary);
+    border: 2px solid var(--cmf-primary);
   }
   
   .cta-button.secondary:hover {
-    background: var(--gray-50);
+    background: var(--cmf-primary);
+    color: var(--cmf-off-white);
     transform: translateY(-2px);
   }
   
@@ -653,7 +653,7 @@ const criticalResources = [
     justify-content: flex-start;
     flex-wrap: wrap;
     padding-top: var(--space-6);
-    border-top: 1px solid var(--gray-200);
+    border-top: 1px solid rgba(245, 245, 245, 0.2);
     margin-bottom: var(--space-6);
   }
   
@@ -662,21 +662,21 @@ const criticalResources = [
     flex-direction: column;
     align-items: center;
     gap: var(--space-1);
-    color: var(--gray-600);
+    color: rgba(245, 245, 245, 0.8);
     font-size: var(--text-sm);
   }
   
   .indicator strong {
     display: block;
     font-size: var(--text-2xl);
-    color: var(--cmf-blue);
+    color: var(--cmf-orange);
     font-weight: 700;
   }
   
   /* Capabilities Section - Asymmetrical Grid */
   .capabilities {
     padding: var(--space-20) 0;
-    background: var(--white);
+    background: var(--cmf-off-white);
     position: relative;
   }
   
@@ -687,8 +687,8 @@ const criticalResources = [
     right: 0;
     bottom: 0;
     width: 200px;
-    background: linear-gradient(90deg, transparent 0%, var(--metal-light) 100%);
-    opacity: 0.3;
+    background: var(--steel-gradient);
+    opacity: 0.1;
   }
   
   .capabilities h2,
@@ -700,7 +700,7 @@ const criticalResources = [
     text-align: center;
     margin-bottom: var(--space-12);
     font-size: clamp(1.75rem, 4vw, 2.5rem);
-    color: var(--gray-900);
+    color: var(--cmf-primary);
     position: relative;
   }
   
@@ -715,8 +715,8 @@ const criticalResources = [
   /* Asymmetrical Capability Cards */
   .capability-card {
     padding: var(--space-8);
-    background: var(--white);
-    border: 1px solid var(--gray-200);
+    background: linear-gradient(135deg, #ffffff 0%, var(--cmf-off-white) 100%);
+    border: 1px solid var(--cmf-metallic-light);
     border-radius: var(--radius-xl);
     text-align: center;
     transition: all var(--transition-base);
@@ -747,7 +747,7 @@ const criticalResources = [
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, var(--cmf-blue) 0%, var(--cmf-accent) 100%);
+    background: linear-gradient(90deg, var(--cmf-primary) 0%, var(--cmf-orange) 100%);
     transform: scaleX(0);
     transition: transform var(--transition-base);
     transform-origin: left;
@@ -755,8 +755,8 @@ const criticalResources = [
   
   .capability-card:hover {
     transform: translateY(-6px) rotate(0.5deg);
-    box-shadow: var(--shadow-xl), 0 0 30px var(--cmf-accent-light);
-    border-color: var(--cmf-accent);
+    box-shadow: var(--shadow-xl), 0 0 30px var(--cmf-orange-light);
+    border-color: var(--cmf-orange);
   }
   
   .capability-card:hover::before {
@@ -766,27 +766,28 @@ const criticalResources = [
   .capability-icon {
     display: inline-flex;
     padding: var(--space-4);
-    background: linear-gradient(135deg, var(--metal-light) 0%, var(--gray-50) 100%);
+    background: var(--metal-texture);
     border-radius: var(--radius-lg);
-    color: var(--cmf-blue);
+    color: var(--cmf-primary);
     margin-bottom: var(--space-4);
     transition: all var(--transition-base);
   }
   
   .capability-card:hover .capability-icon {
-    background: linear-gradient(135deg, var(--cmf-accent-light) 0%, var(--metal-light) 100%);
-    color: var(--cmf-accent);
+    background: linear-gradient(135deg, var(--cmf-orange-light) 0%, var(--cmf-metallic-light) 100%);
+    color: var(--cmf-orange);
     transform: scale(1.1);
   }
   
   .capability-card h3 {
-    color: var(--gray-900);
+    color: var(--cmf-text-dark);
     margin-bottom: var(--space-3);
     font-size: var(--text-2xl);
   }
   
   .capability-card p {
-    color: var(--gray-600);
+    color: var(--cmf-text-dark);
+    opacity: 0.8;
     margin-bottom: var(--space-4);
     line-height: 1.6;
   }
@@ -811,7 +812,7 @@ const criticalResources = [
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
-    color: var(--cmf-blue);
+    color: var(--cmf-primary);
     font-weight: 600;
     text-decoration: none;
     transition: all var(--transition-fast);
@@ -819,13 +820,26 @@ const criticalResources = [
   
   .capability-link:hover {
     gap: var(--space-3);
-    color: var(--cmf-accent);
+    color: var(--cmf-orange);
     text-decoration: underline;
   }
   
   .materials {
     padding: var(--space-16) 0;
-    background: var(--gray-50);
+    background: var(--brushed-metal);
+    background-size: 200px 200px;
+    position: relative;
+  }
+  
+  .materials::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--cmf-off-white);
+    opacity: 0.95;
   }
   
   .materials-grid {

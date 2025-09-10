@@ -127,12 +127,15 @@
   --offset-medium: 10px;
   --offset-large: 20px;
   
-  /* Metal texture gradients */
-  --metal-texture: linear-gradient(135deg, #BDC3C7 0%, #ECF0F1 50%, #BDC3C7 100%);
-  --brushed-metal: linear-gradient(45deg, #BDC3C7 25%, transparent 25%), 
-                   linear-gradient(-45deg, #BDC3C7 25%, transparent 25%), 
-                   linear-gradient(45deg, transparent 75%, #BDC3C7 75%), 
-                   linear-gradient(-45deg, transparent 75%, #BDC3C7 75%);
+  /* Metal texture gradients - CMF Authentic Industrial Feel */
+  --metal-texture: linear-gradient(135deg, var(--cmf-metallic) 0%, var(--cmf-metallic-light) 50%, var(--cmf-metallic) 100%);
+  --brushed-metal: linear-gradient(135deg, var(--cmf-metallic) 0%, var(--cmf-metallic-dark) 50%, var(--cmf-metallic) 100%);
+  --steel-gradient: linear-gradient(45deg, var(--cmf-metallic) 25%, var(--cmf-metallic-light) 50%, var(--cmf-metallic) 75%);
+  
+  /* Canadian-inspired gradients */
+  --canadian-accent: linear-gradient(90deg, var(--cmf-red-light) 0%, transparent 100%);
+  --hero-gradient: linear-gradient(135deg, var(--cmf-primary) 0%, var(--cmf-primary-active) 100%);
+  --warm-gradient: linear-gradient(45deg, var(--cmf-orange-light) 0%, transparent 50%);
   
   /* Container */
   --container-sm: 640px;
@@ -164,8 +167,8 @@ body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   font-size: var(--text-base);
   line-height: var(--leading-normal);
-  color: var(--gray-900);
-  background-color: var(--white);
+  color: var(--cmf-text-dark);
+  background-color: var(--cmf-off-white);
   min-height: 100vh;
 }
 
@@ -198,18 +201,18 @@ h4 {
 
 /* Links */
 a {
-  color: var(--cmf-blue);
+  color: var(--cmf-primary);
   text-decoration: none;
   transition: color var(--transition-fast);
 }
 
 a:hover {
-  color: var(--cmf-blue-hover);
+  color: var(--cmf-primary-hover);
   text-decoration: underline;
 }
 
 a:focus-visible {
-  outline: 2px solid var(--cmf-blue);
+  outline: 2px solid var(--cmf-primary);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
 }
@@ -301,7 +304,7 @@ button {
 }
 
 .focus-visible:focus-visible {
-  outline: 2px solid var(--cmf-blue);
+  outline: 2px solid var(--cmf-primary);
   outline-offset: 2px;
 }
 

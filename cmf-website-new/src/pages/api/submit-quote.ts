@@ -101,8 +101,8 @@ export const POST: APIRoute = async ({ request }) => {
         },
         project: {
           ...formData.project,
-          thickness: formData.project.thickness || '1/4"',
-          budget: formData.project.budget || 'under-5000',
+          thickness: formData.project.thickness || '0.25', // Valid numeric format
+          budget: formData.project.budget || '1k-5k', // Valid enum value
         }
       };
       console.log('Enriched hero form data with defaults');
