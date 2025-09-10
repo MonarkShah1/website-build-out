@@ -146,7 +146,7 @@
   --tracking-wide: 0.02em;         /* UI elements */
   --tracking-wider: 0.05em;        /* Buttons/CTAs */
   
-  /* Spacing Scale (8px base) */
+  /* Spacing Scale - Generous Whitespace System */
   --space-0: 0;
   --space-1: 0.25rem;   /* 4px */
   --space-2: 0.5rem;    /* 8px */
@@ -160,6 +160,12 @@
   --space-16: 4rem;     /* 64px */
   --space-20: 5rem;     /* 80px */
   --space-24: 6rem;     /* 96px */
+  
+  /* Extended Scale for Generous Layouts */
+  --space-28: 7rem;     /* 112px */
+  --space-32: 8rem;     /* 128px - Section breathing room */
+  --space-36: 9rem;     /* 144px */
+  --space-40: 10rem;    /* 160px - Hero/major sections */
   
   /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -457,7 +463,7 @@ button {
   }
 }
 
-/* Reduced motion preferences */
+/* Reduced motion preferences - Comprehensive accessibility support */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -466,6 +472,56 @@ button {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+    transform: none !important;
+  }
+  
+  /* Preserve essential feedback for usability */
+  .form-input:focus,
+  .hero-form input:focus,
+  .paste-container:focus-within {
+    transition: box-shadow 0.1s ease !important;
+    transform: none !important;
+    box-shadow: 0 0 0 2px var(--cmf-orange) !important;
+  }
+  
+  /* Keep hover states but remove transforms */
+  .cta-button:hover,
+  .submit-btn:hover,
+  .capability-card:hover,
+  .portfolio-item:hover,
+  .value-story:hover,
+  .team-member:hover {
+    transform: none !important;
+    animation: none !important;
+  }
+  
+  /* Disable GSAP animations */
+  [data-gsap] {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+  
+  /* Keep success states for feedback */
+  .success-icon {
+    animation: none !important;
+    transform: scale(1) !important;
+    opacity: 1 !important;
+  }
+  
+  /* Disable parallax effects */
+  [data-parallax] {
+    transform: none !important;
+  }
+  
+  /* Disable drag animations */
+  .file-dropzone.drag-active {
+    animation: none !important;
+    transform: none !important;
+  }
+  
+  /* Keep essential loading feedback */
+  .loading-spinner {
+    animation: spin 1s linear infinite !important;
   }
 }
 

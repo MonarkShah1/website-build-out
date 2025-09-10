@@ -42,15 +42,32 @@ export const POST: APIRoute = async ({ request }) => {
     
     if (contentType?.includes('multipart/form-data')) {
       // Handle multipart form data with files
+      console.log('Processing multipart form data...');
       const data = await request.formData();
+      
+      // Log all form data entries for debugging
+      console.log('FormData entries:');
+      for (const [key, value] of data.entries()) {
+        console.log(`- ${key}:`, typeof value, value instanceof File ? `File(${value.name})` : value);
+      }
       
       // Extract JSON data
       const jsonData = data.get('data');
+      console.log('Raw JSON data:', typeof jsonData, jsonData);
+      
       if (typeof jsonData !== 'string') {
-        return createErrorResponse('Invalid form data', 400);
+        console.error('Invalid form data - jsonData is not a string:', typeof jsonData, jsonData);
+        return createErrorResponse('Invalid form data - data field must be a string', 400);
       }
       
-      formData = JSON.parse(jsonData);
+      try {
+        formData = JSON.parse(jsonData);
+        console.log('Successfully parsed form data:', Object.keys(formData));
+      } catch (parseError) {
+        console.error('JSON parse error:', parseError);
+        console.error('Raw JSON string:', jsonData);
+        return createErrorResponse(`JSON parse error: ${parseError instanceof Error ? parseError.message : 'Unknown error'}`, 400);
+      }
       
       // Extract files
       for (const [key, value] of data.entries()) {

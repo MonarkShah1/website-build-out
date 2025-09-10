@@ -153,6 +153,22 @@ if (!description) {
     <!-- Footer with company info -->
     {includeFooter && <Footer />}
     
+    <!-- Animation System -->
+    <script>
+      import('../scripts/animations.js').then(({ initAnimations, enhancePortfolioFilters, initParallaxEffects }) => {
+        // Initialize core animations
+        initAnimations();
+        
+        // Initialize portfolio filters enhancement
+        enhancePortfolioFilters();
+        
+        // Initialize parallax effects (desktop only)
+        initParallaxEffects();
+      }).catch(error => {
+        console.warn('⚠️ Animation system failed to load:', error);
+      });
+    </script>
+    
     <!-- Web Vitals monitoring -->
     <script>
       // Only load on production
