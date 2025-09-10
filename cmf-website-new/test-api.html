@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test API</title>
+</head>
+<body>
+    <h1>Test Hero Form API</h1>
+    <button onclick="testAPI()">Test API Call</button>
+    <div id="result"></div>
+
+    <script>
+        async function testAPI() {
+            const testData = {
+                contact: {
+                    firstName: "John",
+                    lastName: "Doe", 
+                    email: "john@test.com",
+                    phone: "416-555-1234",
+                    company: "Test Company"
+                },
+                project: {
+                    projectName: "Test Quote Request",
+                    description: "This is a test request from the hero form. We need 50 custom steel brackets, 5mm thick, by the end of the month.",
+                    projectType: "custom-fabrication",
+                    material: "steel",
+                    quantity: 50,
+                    requiredDate: "2024-12-31"
+                },
+                services: {
+                    laserCutting: true,
+                    metalBending: false,
+                    welding: false,
+                    assembly: false,
+                    finishing: false,
+                    design: false,
+                    other: ""
+                },
+                files: [],
+                metadata: {
+                    source: "hero-form-test",
+                    submittedAt: new Date().toISOString()
+                },
+                tracking: {}
+            };
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Sending...';
+            
+            try {
+                const response = await fetch('/api/submit-quote', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(testData)
+                });
+                
+                const result = await response.json();
+                
+                resultDiv.innerHTML = `
+                    <h3>Response:</h3>
+                    <p>Status: ${response.status}</p>
+                    <p>Success: ${result.success}</p>
+                    <p>Message: ${result.message}</p>
+                    <pre>${JSON.stringify(result, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <h3>Error:</h3>
+                    <p>${error.message}</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

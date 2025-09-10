@@ -7,6 +7,8 @@
 import Layout from '../layouts/Layout.astro';
 import { Image } from 'astro:assets';
 import { measurePerformance } from '../utils/webVitals';
+import HeroQuoteForm from '../components/HeroQuoteForm/HeroQuoteForm';
+import SimpleHeroForm from '../components/HeroQuoteForm/SimpleHeroForm';
 
 // SEO data for homepage with complete metadata
 const seoData = {
@@ -49,31 +51,32 @@ const criticalResources = [
 
 <Layout {...seoData} resourceHints={criticalResources}>
   <section class="hero" itemscope itemtype="https://schema.org/Service">
-    <div class="container">
-      <h1 itemprop="name">Professional Metal Fabrication Services in Toronto</h1>
-      <p class="lead" itemprop="description">
-        Get instant quotes for precision laser cutting, bending, and welding services.
-        Upload your CAD files and receive competitive pricing in minutes.
-      </p>
-      <div class="cta-group">
-        <a href="/instant-quote" class="cta-button primary" aria-label="Get an instant quote for metal fabrication">
-          <span>Get Instant Quote</span>
-          <span class="cta-icon" aria-hidden="true">→</span>
-        </a>
-        <a href="tel:+14165550123" class="cta-button secondary" aria-label="Call us at 416-555-0123">
-          <span>Call: (416) 555-0123</span>
-        </a>
+    <div class="container hero-container">
+      <div class="hero-content">
+        <h1 itemprop="name">Professional Metal Fabrication Services in Toronto</h1>
+        <p class="lead" itemprop="description">
+          Get instant quotes for precision laser cutting, bending, and welding services.
+          Paste your project details or RFQ email for immediate response.
+        </p>
+        <div class="trust-indicators">
+          <span class="indicator">
+            <strong>500+</strong> Projects Completed
+          </span>
+          <span class="indicator">
+            <strong>24hr</strong> Turnaround Available
+          </span>
+          <span class="indicator">
+            <strong>ISO 9001</strong> Certified
+          </span>
+        </div>
+        <div class="backup-cta">
+          <a href="tel:+14165550123" class="cta-button secondary" aria-label="Call us at 416-555-0123">
+            <span>📞 Call: (416) 555-0123</span>
+          </a>
+        </div>
       </div>
-      <div class="trust-indicators">
-        <span class="indicator">
-          <strong>500+</strong> Projects Completed
-        </span>
-        <span class="indicator">
-          <strong>24hr</strong> Turnaround Available
-        </span>
-        <span class="indicator">
-          <strong>ISO 9001</strong> Certified
-        </span>
+      <div class="hero-form">
+        <HeroQuoteForm client:load />
       </div>
     </div>
   </section>
@@ -330,9 +333,23 @@ const criticalResources = [
   .hero {
     padding: var(--space-20) 0;
     background: linear-gradient(135deg, var(--gray-50) 0%, var(--white) 100%);
-    text-align: center;
     position: relative;
     overflow: hidden;
+  }
+  
+  .hero-container {
+    display: grid;
+    grid-template-columns: 1fr 500px;
+    gap: var(--space-12);
+    align-items: center;
+  }
+  
+  .hero-content {
+    text-align: left;
+  }
+  
+  .hero-form {
+    justify-self: end;
   }
   
   .hero::before {
@@ -356,8 +373,8 @@ const criticalResources = [
     z-index: 1;
   }
   
-  h1 {
-    font-size: clamp(2rem, 5vw, 3.5rem);
+  .hero h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
     line-height: 1.2;
     margin-bottom: var(--space-6);
     background: linear-gradient(135deg, var(--gray-900) 0%, var(--cmf-blue) 100%);
@@ -366,20 +383,16 @@ const criticalResources = [
     background-clip: text;
   }
   
-  .lead {
-    font-size: clamp(1.125rem, 2vw, 1.375rem);
+  .hero .lead {
+    font-size: clamp(1.125rem, 2vw, 1.25rem);
     color: var(--gray-600);
-    max-width: 700px;
-    margin: 0 auto var(--space-8);
+    max-width: 600px;
+    margin: 0 0 var(--space-8);
     line-height: 1.6;
   }
   
-  .cta-group {
-    display: flex;
-    gap: var(--space-4);
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-bottom: var(--space-8);
+  .backup-cta {
+    margin-top: var(--space-4);
   }
   
   .cta-button {
@@ -389,23 +402,11 @@ const criticalResources = [
     padding: var(--space-3) var(--space-6);
     border-radius: var(--radius-lg);
     font-weight: 600;
-    font-size: var(--text-lg);
+    font-size: var(--text-base);
     transition: all var(--transition-fast);
     text-decoration: none;
     position: relative;
     overflow: hidden;
-  }
-  
-  .cta-button.primary {
-    background: var(--cmf-blue);
-    color: var(--white);
-    box-shadow: 0 4px 14px rgba(0,82,204,0.25);
-  }
-  
-  .cta-button.primary:hover {
-    background: var(--cmf-blue-hover);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0,82,204,0.35);
   }
   
   .cta-button.secondary {
@@ -424,21 +425,15 @@ const criticalResources = [
     font-size: var(--text-xl);
   }
   
-  .cta-icon {
-    transition: transform var(--transition-fast);
-  }
-  
-  .cta-button:hover .cta-icon {
-    transform: translateX(4px);
-  }
   
   .trust-indicators {
     display: flex;
-    gap: var(--space-8);
-    justify-content: center;
+    gap: var(--space-6);
+    justify-content: flex-start;
     flex-wrap: wrap;
     padding-top: var(--space-6);
     border-top: 1px solid var(--gray-200);
+    margin-bottom: var(--space-6);
   }
   
   .indicator {
@@ -628,22 +623,45 @@ const criticalResources = [
     flex-wrap: wrap;
   }
   
+  @media (max-width: 1024px) {
+    .hero-container {
+      grid-template-columns: 1fr;
+      gap: var(--space-8);
+      text-align: center;
+    }
+    
+    .hero-content {
+      text-align: center;
+      order: 1;
+    }
+    
+    .hero-form {
+      justify-self: center;
+      order: 2;
+      max-width: 500px;
+      width: 100%;
+    }
+    
+    .trust-indicators {
+      justify-content: center;
+    }
+  }
+  
   @media (max-width: 768px) {
     .services-grid {
       grid-template-columns: 1fr;
     }
     
-    .trust-indicators {
+    .hero {
+      padding: var(--space-12) 0;
+    }
+    
+    .hero-container {
       gap: var(--space-6);
     }
     
-    .cta-group {
-      flex-direction: column;
-      align-items: stretch;
-    }
-    
-    .cta-button {
-      justify-content: center;
+    .trust-indicators {
+      gap: var(--space-4);
     }
   }
 </style>

@@ -14,26 +14,21 @@ dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
 // Initialize HubSpot client
 const getHubSpotClient = () => {
   // In server-side code, use process.env for private environment variables
-  const apiKey = process.env.HUBSPOT_API_KEY || import.meta.env.HUBSPOT_API_KEY;
+  const accessToken = process.env.HUBSPOT_API_KEY || import.meta.env.HUBSPOT_API_KEY;
   
-  console.log('Debug - Raw API Key value:', apiKey);
-  console.log('Debug - API Key type:', typeof apiKey);
-  console.log('Debug - API Key equals placeholder?:', apiKey === 'your_private_api_key_here');
-  console.log('Debug - API Key starts with "your"?:', apiKey?.startsWith('your'));
-  
-  if (!apiKey || apiKey === 'your_private_api_key_here' || apiKey.startsWith('your_private')) {
+  if (!accessToken || accessToken === 'your_private_api_key_here' || accessToken.startsWith('your_private')) {
     console.error('HubSpot API key is not configured or is still the placeholder value.');
-    console.error('Current value:', apiKey);
     console.error('Please update HUBSPOT_API_KEY in your .env.local file with your actual API key.');
     throw new Error('HubSpot API key is not configured');
   }
   
-  console.log('HubSpot API Key loaded, length:', apiKey.length);
-  console.log('API Key prefix:', apiKey.substring(0, 7));
+  console.log('HubSpot client initialized with token:', accessToken.substring(0, 10) + '...');
   
-  // Ensure the API key is trimmed of any whitespace
-  const trimmedKey = apiKey.trim();
-  return new Client({ accessToken: trimmedKey });
+  // Use accessToken parameter (not apiKey) for Client initialization
+  return new Client({ 
+    accessToken: accessToken.trim(),
+    numberOfApiCallRetries: 3
+  });
 };
 
 // Map form data to HubSpot contact properties
@@ -281,7 +276,11 @@ const associateFileWithContact = async (
 // Submit form data to HubSpot Forms API (for tracking and analytics)
 export const submitToHubSpotForms = async (
   formData: QuoteFormData,
-  pageContext: { pageUri: string; pageName: string }
+  pageContext: { 
+    pageUri: string; 
+    pageName: string;
+    hutk?: string | null;
+  }
 ): Promise<void> => {
   const portalId = process.env.PUBLIC_HUBSPOT_PORTAL_ID || import.meta.env.PUBLIC_HUBSPOT_PORTAL_ID;
   const formGuid = process.env.PUBLIC_HUBSPOT_FORM_GUID || import.meta.env.PUBLIC_HUBSPOT_FORM_GUID;
@@ -291,18 +290,22 @@ export const submitToHubSpotForms = async (
     return;
   }
   
-  const submission: HubSpotFormSubmission = {
-    portalId,
-    formGuid,
+  console.log('Submitting to HubSpot Forms API...');
+  console.log('Portal ID:', portalId);
+  console.log('Form GUID:', formGuid);
+  console.log('Has tracking cookie:', !!pageContext.hutk);
+  
+  // Build submission without objectTypeId (not needed for v3 API)
+  const submission = {
     fields: [
-      { objectTypeId: '0-1', name: 'email', value: formData.contact.email },
-      { objectTypeId: '0-1', name: 'firstname', value: formData.contact.firstName },
-      { objectTypeId: '0-1', name: 'lastname', value: formData.contact.lastName },
-      { objectTypeId: '0-1', name: 'phone', value: formData.contact.phone },
-      { objectTypeId: '0-1', name: 'company', value: formData.contact.company },
-      { objectTypeId: '0-1', name: 'jobtitle', value: formData.contact.jobTitle || '' },
-      // Combine project details into message field since custom fields don't exist
-      { objectTypeId: '0-1', name: 'message', value: 
+      { name: 'email', value: formData.contact.email },
+      { name: 'firstname', value: formData.contact.firstName },
+      { name: 'lastname', value: formData.contact.lastName },
+      { name: 'phone', value: formData.contact.phone },
+      { name: 'company', value: formData.contact.company },
+      { name: 'jobtitle', value: formData.contact.jobTitle || '' },
+      // Combine project details into message field
+      { name: 'message', value: 
         `Project: ${formData.project.projectName}\n` +
         `Type: ${formData.project.projectType}\n` +
         `Material: ${formData.project.material}\n` +
@@ -313,9 +316,13 @@ export const submitToHubSpotForms = async (
       },
     ],
     context: {
-      pageUri: pageContext.pageUri,
-      pageName: pageContext.pageName,
-      ipAddress: formData.metadata?.ipAddress,
+      hutk: pageContext.hutk || undefined, // HubSpot tracking cookie - CRITICAL for analytics
+      pageUri: pageContext.pageUri || 'https://canadianmetalfab.com/get-quote',
+      pageName: pageContext.pageName || 'Get Quote Form',
+      // Don't include ipAddress if it's 'unknown' or invalid
+      ...(formData.metadata?.ipAddress && formData.metadata.ipAddress !== 'unknown' 
+        ? { ipAddress: formData.metadata.ipAddress }
+        : {}),
     },
     legalConsentOptions: {
       consent: {
@@ -345,7 +352,12 @@ export const submitToHubSpotForms = async (
     );
     
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error('HubSpot Forms API error:', response.status, errorText);
       throw new Error(`HubSpot Forms API error: ${response.statusText}`);
+    } else {
+      const result = await response.json();
+      console.log('Form submission successful:', result);
     }
   } catch (error) {
     console.error('Error submitting to HubSpot Forms:', error);
@@ -356,7 +368,8 @@ export const submitToHubSpotForms = async (
 // Create a complete quote submission in HubSpot
 export const submitQuoteToHubSpot = async (
   formData: QuoteFormData,
-  files: File[] = []
+  files: File[] = [],
+  trackingData?: { hutk?: string | null; pageUri?: string; pageName?: string }
 ): Promise<{ contactId: string; dealId: string; fileIds: string[] }> => {
   try {
     // 1. Create or update contact
@@ -391,8 +404,9 @@ export const submitQuoteToHubSpot = async (
     console.log('Step 4: Submitting to Forms API...');
     try {
       await submitToHubSpotForms(formData, {
-        pageUri: '/get-quote',
-        pageName: 'Get Quote Form'
+        hutk: trackingData?.hutk || null,
+        pageUri: trackingData?.pageUri || '/get-quote',
+        pageName: trackingData?.pageName || 'Get Quote Form'
       });
       console.log('Form submission tracked');
     } catch (formError) {

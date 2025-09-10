@@ -806,6 +806,7 @@ Complete event tracking specification: `/docs/analytics/form-events.md`
 
 Error handling and recovery strategies: `/docs/errors/reference.md`
 
+
 # Service Page Content Brief & SEO Blueprint
 
 ## 1. Objective

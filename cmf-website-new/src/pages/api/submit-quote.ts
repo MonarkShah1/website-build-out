@@ -129,6 +129,9 @@ export const POST: APIRoute = async ({ request }) => {
       }
     }
     
+    // Extract tracking data if provided
+    const trackingData = formData.tracking || {};
+    
     // Submit to HubSpot
     let hubspotContactId: string | undefined;
     let hubspotDealId: string | undefined;
@@ -136,7 +139,12 @@ export const POST: APIRoute = async ({ request }) => {
     try {
       const hubspotResult = await submitQuoteToHubSpot(
         validationResult.data,
-        files
+        files,
+        {
+          hutk: trackingData.hutk,
+          pageUri: trackingData.pageUri,
+          pageName: trackingData.pageName
+        }
       );
       
       hubspotContactId = hubspotResult.contactId;

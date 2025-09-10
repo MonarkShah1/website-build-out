@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useQuoteFormStore } from '../../stores/quoteFormStore';
 import { validateStep } from '../../schemas/quoteFormSchema';
+import { getTrackingData, installHubSpotTracking } from '../../utils/hubspot-tracking';
 import StepIndicator from './StepIndicator';
 import ContactInfoStep from './steps/ContactInfoStep';
 import ProjectDetailsStep from './steps/ProjectDetailsStep';
@@ -33,6 +34,12 @@ const QuoteForm: React.FC = () => {
     setIsClient(true);
     // Load saved progress on mount
     useQuoteFormStore.getState().loadSavedProgress();
+    
+    // Install HubSpot tracking if we have a portal ID
+    const portalId = import.meta.env.PUBLIC_HUBSPOT_PORTAL_ID;
+    if (portalId) {
+      installHubSpotTracking(portalId);
+    }
   }, []);
 
   const handleStepValidation = () => {
@@ -95,6 +102,9 @@ const QuoteForm: React.FC = () => {
       const getAllFileObjects = useQuoteFormStore.getState().getAllFileObjects;
       const fileObjects = getAllFileObjects();
       
+      // Get HubSpot tracking data
+      const trackingData = getTrackingData();
+      
       // Prepare form data - convert dates to ISO strings for JSON serialization
       const submitFormData = {
         ...formData,
@@ -103,7 +113,8 @@ const QuoteForm: React.FC = () => {
           uploadedAt: file.uploadedAt instanceof Date 
             ? file.uploadedAt.toISOString() 
             : file.uploadedAt
-        }))
+        })),
+        tracking: trackingData // Include tracking data
       };
 
       // Create FormData object if we have files, otherwise use JSON
