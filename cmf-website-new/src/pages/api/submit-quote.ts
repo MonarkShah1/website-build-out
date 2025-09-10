@@ -150,12 +150,19 @@ export const POST: APIRoute = async ({ request }) => {
       hubspotContactId = hubspotResult.contactId;
       hubspotDealId = hubspotResult.dealId;
     } catch (hubspotError) {
-      // Log HubSpot error but don't fail the entire submission
+      // Log HubSpot error with more details
       console.error('HubSpot submission error:', hubspotError);
+      console.error('Environment check:', {
+        hasApiKey: !!(process.env.HUBSPOT_API_KEY || import.meta.env.HUBSPOT_API_KEY),
+        hasPortalId: !!(process.env.PUBLIC_HUBSPOT_PORTAL_ID || import.meta.env.PUBLIC_HUBSPOT_PORTAL_ID),
+        hasFormGuid: !!(process.env.PUBLIC_HUBSPOT_FORM_GUID || import.meta.env.PUBLIC_HUBSPOT_FORM_GUID)
+      });
       
-      // You might want to implement a fallback here
-      // such as sending an email or saving to a database
+      // Implement a fallback here
       await handleFallbackSubmission(validationResult.data, quoteId, savedFiles);
+      
+      // Still return success to user but note HubSpot failure
+      console.log('Continuing without HubSpot integration due to error');
     }
     
     // Send email notification with file information
